@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:data": "node scripts/build-n112.mjs && node scripts/build-n113.mjs && node scripts/build-n114.mjs && node scripts/build-n115.mjs && ./build-bank.sh",
+    "build:data": "node scripts/build-n111.mjs && node scripts/build-n112.mjs && node scripts/build-n113.mjs && node scripts/build-n114.mjs && node scripts/build-n115.mjs && ./build-bank.sh",
     "test": "node tests/validate.mjs"
   }
 }

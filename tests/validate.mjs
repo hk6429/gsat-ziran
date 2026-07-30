@@ -11,7 +11,8 @@ const expected = {
   115: { total:56, choice:48, written:8, stats:30, imageRefs:65 },
   114: { total:57, choice:48, written:9, stats:21, imageRefs:70 },
   113: { total:56, choice:48, written:8, stats:22, imageRefs:60 },
-  112: { total:60, choice:52, written:8, stats:31, imageRefs:63 }
+  112: { total:60, choice:52, written:8, stats:31, imageRefs:63 },
+  111: { total:60, choice:52, written:8, stats:23, imageRefs:67 }
 };
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
@@ -29,8 +30,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 4, "題庫必須正好載入 112、113、114、115 四個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112", "題庫年份必須為 115、114、113、112");
+check(banks.length === 5, "題庫必須正好載入 111、112、113、114、115 五個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111", "題庫年份必須為 115、114、113、112、111");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -117,6 +118,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
