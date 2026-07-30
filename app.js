@@ -43,7 +43,7 @@
   }
 
   function answerKeys(answer) {
-    return String(answer || "").match(/[A-T]/g) || [];
+    return String(answer || "").match(/[A-Z]/g) || [];
   }
 
   function selectedSubjects() {

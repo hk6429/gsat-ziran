@@ -142,7 +142,8 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}, questionNum
 export async function buildLegacy(config) {
   const {
     year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, transcriptOverrides = {}, topics, category, pageRanges,
-    singlePass = {}, questionNumbers = Array.from({ length: 68 }, (_, index) => index + 1), official
+    singlePass = {}, questionNumbers = Array.from({ length: 68 }, (_, index) => index + 1), official,
+    officialTextTransform
   } = config;
   const answerKey = JSON.parse(await fs.readFile(
     path.join(root, "sources", "official", String(year), "answer-key.json"),
@@ -157,7 +158,8 @@ export async function buildLegacy(config) {
 
   let transcripts = [];
   if (officialTextFile) {
-    const raw = await fs.readFile(path.join(root, officialTextFile), "utf8");
+    const sourceRaw = await fs.readFile(path.join(root, officialTextFile), "utf8");
+    const raw = officialTextTransform ? officialTextTransform(sourceRaw) : sourceRaw;
     transcripts = parseOfficialTranscript(raw, year, imageOnlyQuestions, questionNumbers);
   } else if (learnModeId) {
     const response = await fetch(`https://www.learnmode.net/api/flip/qiz/${learnModeId}`);

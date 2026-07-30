@@ -8,6 +8,7 @@ await import(pathToFileURL(path.join(root, "data", "bank.js")));
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
+  84: { total:67, choice:67, written:0, stats:0, imageRefs:67 },
   85: { total:65, choice:65, written:0, stats:0, imageRefs:65 },
   86: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
   87: { total:68, choice:68, written:0, stats:0, imageRefs:68 },
@@ -66,8 +67,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 31, "題庫必須正好載入 85–115 三十一個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85", "題庫年份必須為 85–115");
+check(banks.length === 32, "題庫必須正好載入 84–115 三十二個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84", "題庫年份必須為 84–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -97,7 +98,9 @@ for (const bank of banks) {
   check(bank.questions.filter(q => q.pass != null).length === target.stats, `${bank.year} 官方答對率題數不符`);
   check(imageRefs === target.imageRefs, `${bank.year} 官方頁面引用數不符`);
   check(new Set(bank.questions.map(q => q.no)).size === target.total, `${bank.year} 題號不可重複`);
-  const expectedNumbers = bank.year === 85
+  const expectedNumbers = bank.year === 84
+    ? [...Array.from({ length: 60 }, (_, index) => index + 1), ...Array.from({ length: 7 }, (_, index) => index + 81)]
+    : bank.year === 85
     ? [...Array.from({ length: 57 }, (_, index) => index + 1), ...Array.from({ length: 8 }, (_, index) => index + 81)]
     : bank.year === 88
     ? [...Array.from({ length: 47 }, (_, index) => index + 1), ...Array.from({ length: 19 }, (_, index) => index + 61)]
@@ -135,9 +138,9 @@ for (const bank of banks) {
       check(q.pass == null, `${bank.year} 第 ${q.no} 題全體給分題不應將官方 0% 顯示為難度`);
       totalOfficialMatches += official === "FULL_CREDIT" ? 1 : 0;
     } else {
-      check(/^[A-T]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
+      check(/^[A-Z]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
       const optionKeys = Object.keys(q.options).join("");
-      check(optionKeys === "ABCDEFGHIJKLMNOPQRST".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
+      check(optionKeys === "ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
       if (bank.year >= 91 && bank.year <= 104) {
         check(Object.values(q.options).every(option => typeof option === "string" && option.trim()), `${bank.year} 第 ${q.no} 題不可有空白選項`);
       }
@@ -145,7 +148,7 @@ for (const bank of banks) {
       check(q.alternateAnswers == null || (
         Array.isArray(q.alternateAnswers) &&
         q.alternateAnswers.length > 0 &&
-        q.alternateAnswers.every(answer => /^[A-T]+$/.test(answer))
+        q.alternateAnswers.every(answer => /^[A-Z]+$/.test(answer))
       ), `${bank.year} 第 ${q.no} 題替代答案格式不合法`);
       totalOfficialMatches += q.answer === official ? 1 : 0;
     }
@@ -220,6 +223,10 @@ const n85q83 = banks.find(bank => bank.year === 85)?.questions.find(q => q.no ==
 check(n85q83?.answer === "AHIK" && Object.keys(n85q83?.options || {}).join("") === "ABCDEFGHIJKL", "85 年第 83 題必須保留 A–L 電學單位選項");
 const n85q86 = banks.find(bank => bank.year === 85)?.questions.find(q => q.no === 86);
 check(n85q86?.answer === "CFH" && Object.keys(n85q86?.options || {}).join("") === "ABCDEFGHI", "85 年第 86 題必須保留 A–I 電路選項");
+const n84q81 = banks.find(bank => bank.year === 84)?.questions.find(q => q.no === 81);
+check(n84q81?.answer === "BJ" && Object.keys(n84q81?.options || {}).sort().join("") === "ABCDEFGHIJ", "84 年第 81 題必須保留 A–J 基因與細胞選項");
+const n84q85 = banks.find(bank => bank.year === 84)?.questions.find(q => q.no === 85);
+check(n84q85?.answer === "R" && Object.keys(n84q85?.options || {}).join("") === "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "84 年第 85 題必須保留 A–Z 元素代碼選項");
 
 for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
@@ -234,7 +241,7 @@ check(/\\d\{2,3\}/.test(checkJs), "查題頁必須支援二至三位數學年度
 check(/lookupCoverage/.test(checkHtml) && /Math\.min\(\.\.\.years\)/.test(checkJs), "查題頁收錄範圍必須由題庫年份動態產生");
 const appJs = fs.readFileSync(path.join(root, "app.js"), "utf8");
 check(/q\.fullCredit/.test(appJs), "練習頁必須支援官方全體給分題");
-check(/match\(\/\[A-T\]\//.test(appJs), "練習頁必須支援 A–T 圖示選項答案");
+check(/match\(\/\[A-Z\]\//.test(appJs), "練習頁必須支援 A–Z 圖示選項答案");
 check(/q\.fullCredit/.test(checkJs), "查題頁必須支援官方全體給分題");
 
 const publicText = ["index.html", "check.html", "about.html", "privacy.html", "README.md", "manifest.json", "robots.txt", "sitemap.xml"]
@@ -249,6 +256,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
