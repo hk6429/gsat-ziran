@@ -1,0 +1,12 @@
+{
+  "name": "學測・指考國文題庫 — 歷屆試題分類練習",
+  "short_name": "國文題庫",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#eef1f7",
+  "theme_color": "#2e4a8a",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

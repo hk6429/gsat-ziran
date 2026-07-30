@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公佈欄海報 — 學測・指考國文題庫</title>
+<meta name="description" content="學測・指考國文題庫公佈欄海報，可列印張貼供班級宣傳使用。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{ --ink:#22283a; --paper:#eef1f7; --accent:#2e4a8a; --seal:#33478f; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{font-family:"Songti TC","Noto Serif TC",serif; background:#cdd6ea; color:var(--ink)}
+  .toolbar{max-width:760px; margin:0 auto; padding:16px; text-align:center}
+  .toolbar button, .toolbar a{font:inherit; font-size:1rem; padding:10px 22px; border-radius:4px 12px 4px 12px; border:0; background:var(--seal); color:#fff9ec; cursor:pointer; text-decoration:none; display:inline-block}
+  .poster{width:210mm; min-height:297mm; margin:0 auto 30px; background:var(--paper); padding:20mm 16mm; text-align:center;
+    box-shadow:0 2px 12px rgba(0,0,0,.25); background-image:radial-gradient(ellipse at top left, rgba(138,46,33,.06), transparent 55%);}
+  .poster h1{font-size:2.6rem; color:var(--accent); letter-spacing:.15em; margin-top:20mm}
+  .poster .sub{font-size:1.2rem; color:var(--ink); opacity:.85; margin-top:10px}
+  .poster .qr{margin:30mm auto 10mm; padding:14px; background:#fff; display:inline-block; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,.15)}
+  .poster .qr img{display:block; width:220px; height:220px}
+  .poster .url{font-size:1.1rem; color:var(--accent); margin-top:14px; letter-spacing:.03em}
+  .poster .desc{max-width:120mm; margin:20mm auto 0; font-size:1rem; line-height:1.9; color:var(--ink)}
+  .poster .desc li{list-style:none; margin-bottom:8px}
+  .poster .foot{margin-top:20mm; font-size:.85rem; color:#5f6b85}
+  @media print{
+    body{background:#fff}
+    .toolbar,.no-print{display:none !important}
+    .poster{box-shadow:none; margin:0; width:auto; min-height:0}
+  }
+
+a{color:var(--seal,#33478f); text-decoration:underline; text-decoration-color:rgba(51,71,143,.4); text-underline-offset:3px}
+a:hover{text-decoration-color:rgba(51,71,143,.9)}
+</style>
+</head>
+<body>
+  <div class="toolbar no-print">
+    <a href="index.html">← 回題庫首頁</a>
+    <button onclick="window.print()">🖨 列印海報（A4）</button>
+  </div>
+  <div class="poster">
+    <h1>學測・指考國文題庫</h1>
+    <div class="sub">學測．指考歷屆國文試題　分類練習系統</div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https%3A%2F%2Fgsat-guowen.vercel.app%2F" alt="學測・指考國文題庫網站 QR Code，掃描後開啟 gsat-guowen.vercel.app">
+    </div>
+    <div class="url">gsat-guowen.vercel.app</div>
+    <ul class="desc">
+      <li>📱 掃描上方 QR Code，手機、平板都能直接練習</li>
+      <li>🎯 不用登入、不用下載 App，點開就能寫題目</li>
+      <li>📚 收錄 學測 103～114 年＋指考 91～110 年國文歷屆試題，共 32 年份、950 題</li>
+      <li>✅ 每題附大考中心官方答對率與白話解析，不會只是對答案</li>
+      <li>🔒 不蒐集個資，作答紀錄只存在自己的裝置裡</li>
+    </ul>
+    <div class="foot">題目來源：大學入學考試中心 學科能力測驗、指定科目考試歷屆試題</div>
+    <div class="foot">主站打不開時，備用網址：gsat-guowen.pages.dev、gsat-guowen.netlify.app</div>
+  </div>
+<img src="https://visitor-badge.laobi.icu/badge?page_id=hk6429.gsat-guowen" alt="訪客人數" loading="lazy" style="position:fixed;right:14px;bottom:14px;z-index:2147483000;border-radius:999px;box-shadow:0 2px 10px rgba(0,0,0,.35);">
+<script>window.goatcounter = {path: p => location.host + p}</script>
+<script data-goatcounter="https://hk6429.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
