@@ -64,7 +64,7 @@ function cleanPdfText(value) {
   return text.replace(/\s+/g, " ").trim();
 }
 
-function parseOfficialTranscript(raw, year) {
+function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
   const firstSection = raw.search(/第\s*壹\s*部\s*分/);
   const source = firstSection >= 0 ? raw.slice(firstSection) : raw;
   const allMarkers = [...source.matchAll(/(?:^|\n)\s*(\d{1,2})\.\s*/gm)];
@@ -92,7 +92,14 @@ function parseOfficialTranscript(raw, year) {
     }
     block = block.replace(/(?:二\s*、\s*多\s*選\s*題|三\s*、\s*綜\s*合\s*題|第\s*貳\s*部\s*分)[\s\S]*$/, "");
     const optionMatches = [...block.matchAll(/\(([A-F])\)/g)];
-    if (optionMatches.length < 2) throw new Error(`${year} 第 ${no} 題選項解析失敗`);
+    if (optionMatches.length < 2) {
+      const labels = imageOnlyQuestions[no];
+      if (!labels?.length) throw new Error(`${year} 第 ${no} 題選項解析失敗`);
+      return {
+        stem: [passages[no], cleanPdfText(block)].filter(Boolean).join("\n\n"),
+        options: Object.fromEntries(labels.map(label => [label, "圖示選項（請參照官方原卷）"]))
+      };
+    }
     const options = {};
     optionMatches.forEach((option, optionIndex) => {
       const value = block.slice(option.index + option[0].length, optionMatches[optionIndex + 1]?.index ?? block.length);
@@ -108,7 +115,7 @@ function parseOfficialTranscript(raw, year) {
 
 export async function buildLegacy(config) {
   const {
-    year, duration, transcriptBase, learnModeId, officialTextFile, topics, category, pageRanges, singlePass, official
+    year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, topics, category, pageRanges, singlePass, official
   } = config;
   const answerKey = JSON.parse(await fs.readFile(
     path.join(root, "sources", "official", String(year), "answer-key.json"),
@@ -124,7 +131,7 @@ export async function buildLegacy(config) {
   let transcripts = [];
   if (officialTextFile) {
     const raw = await fs.readFile(path.join(root, officialTextFile), "utf8");
-    transcripts = parseOfficialTranscript(raw, year);
+    transcripts = parseOfficialTranscript(raw, year, imageOnlyQuestions);
   } else if (learnModeId) {
     const response = await fetch(`https://www.learnmode.net/api/flip/qiz/${learnModeId}`);
     if (!response.ok) throw new Error(`學習吧轉錄 API HTTP ${response.status}`);

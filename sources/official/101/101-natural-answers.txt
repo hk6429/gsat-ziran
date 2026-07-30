@@ -1,0 +1,27 @@
+          101 學年度學科能力測驗
+
+           自然考科選擇題答案
+
+
+題號   答案   題號   答案    題號   答案    題號   答案
+1    D    21   A     41   DE    61   B
+2    C    22    E    42   BD    62   C
+3    A    23    C    43   CE    63   C
+4    E    24    B    44    E    64   B
+5    A    25    B    45   D     65   B
+6    C    26   D     46    E    66   A
+7    D    27    B    47    C    67   BE
+8    D    28   A     48    C    68   E
+9    D    29   AE    49   AD
+10   D    30   DE    50   ABC
+11   D    31   ABD   51    C
+12   A    32   ACE   52   D
+13   E    33   CD    53    B
+14   D    34   CD    54   AD
+15   E    35   AD    55    B
+16   E    36   AC    56   AE
+17   D    37   AE    57   BC
+18   D    38   BD    58    E
+19   B    39   BD    59   D
+20   B    40   BE    60    E
+
