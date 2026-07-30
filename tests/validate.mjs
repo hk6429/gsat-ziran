@@ -8,6 +8,7 @@ await import(pathToFileURL(path.join(root, "data", "bank.js")));
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
+  83: { total:69, choice:69, written:0, stats:0, imageRefs:69 },
   84: { total:67, choice:67, written:0, stats:0, imageRefs:67 },
   85: { total:65, choice:65, written:0, stats:0, imageRefs:65 },
   86: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
@@ -67,8 +68,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 32, "題庫必須正好載入 84–115 三十二個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84", "題庫年份必須為 84–115");
+check(banks.length === 33, "題庫必須正好載入 83–115 三十三個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83", "題庫年份必須為 83–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -227,6 +228,10 @@ const n84q81 = banks.find(bank => bank.year === 84)?.questions.find(q => q.no ==
 check(n84q81?.answer === "BJ" && Object.keys(n84q81?.options || {}).sort().join("") === "ABCDEFGHIJ", "84 年第 81 題必須保留 A–J 基因與細胞選項");
 const n84q85 = banks.find(bank => bank.year === 84)?.questions.find(q => q.no === 85);
 check(n84q85?.answer === "R" && Object.keys(n84q85?.options || {}).join("") === "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "84 年第 85 題必須保留 A–Z 元素代碼選項");
+const n83q10 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 10);
+check(n83q10?.answer === "A" && Object.keys(n83q10?.options || {}).join("") === "ABCD", "83 年第 10 題必須保留四個細菌生長曲線選項");
+const n83q53 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 53);
+check(n83q53?.answer === "D" && /第 53–57 題為綜合型題組/.test(n83q53?.passage || ""), "83 年第 53 題必須保留河口綜合題組情境");
 
 for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
@@ -256,6 +261,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
