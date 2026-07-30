@@ -8,6 +8,7 @@ await import(pathToFileURL(path.join(root, "data", "bank.js")));
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
+  89: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
   90: { total:65, choice:65, written:0, stats:0, imageRefs:65 },
   91: { total:68, choice:68, written:0, stats:68, imageRefs:68 },
   92: { total:68, choice:68, written:0, stats:67, imageRefs:68 },
@@ -44,7 +45,7 @@ function answersFromOfficialText(year) {
   const text = fs.readFileSync(filename, "utf8");
   const answers = {};
   for (const line of text.split("\n")) {
-    for (const match of line.matchAll(/(\d{1,2})\s+([A-J]+|／)/g)) {
+    for (const match of line.matchAll(/(\d{1,2})\s+([A-T]+|／)/g)) {
       answers[match[1]] = match[2] === "／" ? null : match[2];
     }
   }
@@ -61,8 +62,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 26, "題庫必須正好載入 90–115 二十六個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90", "題庫年份必須為 90–115");
+check(banks.length === 27, "題庫必須正好載入 89–115 二十七個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89", "題庫年份必須為 89–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -92,8 +93,10 @@ for (const bank of banks) {
   check(bank.questions.filter(q => q.pass != null).length === target.stats, `${bank.year} 官方答對率題數不符`);
   check(imageRefs === target.imageRefs, `${bank.year} 官方頁面引用數不符`);
   check(new Set(bank.questions.map(q => q.no)).size === target.total, `${bank.year} 題號不可重複`);
-  const expectedNumbers = bank.year === 90
-    ? [...Array.from({ length: 48 }, (_, index) => index + 1), ...Array.from({ length: 17 }, (_, index) => index + 61)]
+  const expectedNumbers = bank.year === 89
+    ? [...Array.from({ length: 49 }, (_, index) => index + 1), ...Array.from({ length: 17 }, (_, index) => index + 61)]
+    : bank.year === 90
+      ? [...Array.from({ length: 48 }, (_, index) => index + 1), ...Array.from({ length: 17 }, (_, index) => index + 61)]
     : Array.from({ length: target.total }, (_, index) => index + 1);
   check(bank.questions.map(q => q.no).join(",") === expectedNumbers.join(","), `${bank.year} 題號範圍不符合官方原卷`);
 
@@ -124,9 +127,9 @@ for (const bank of banks) {
       check(q.pass == null, `${bank.year} 第 ${q.no} 題全體給分題不應將官方 0% 顯示為難度`);
       totalOfficialMatches += official === "FULL_CREDIT" ? 1 : 0;
     } else {
-      check(/^[A-J]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
+      check(/^[A-T]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
       const optionKeys = Object.keys(q.options).join("");
-      check(optionKeys === "ABCDEFGHIJ".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
+      check(optionKeys === "ABCDEFGHIJKLMNOPQRST".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
       if (bank.year >= 91 && bank.year <= 104) {
         check(Object.values(q.options).every(option => typeof option === "string" && option.trim()), `${bank.year} 第 ${q.no} 題不可有空白選項`);
       }
@@ -134,7 +137,7 @@ for (const bank of banks) {
       check(q.alternateAnswers == null || (
         Array.isArray(q.alternateAnswers) &&
         q.alternateAnswers.length > 0 &&
-        q.alternateAnswers.every(answer => /^[A-J]+$/.test(answer))
+        q.alternateAnswers.every(answer => /^[A-T]+$/.test(answer))
       ), `${bank.year} 第 ${q.no} 題替代答案格式不合法`);
       totalOfficialMatches += q.answer === official ? 1 : 0;
     }
@@ -189,6 +192,10 @@ const n90q71 = banks.find(bank => bank.year === 90)?.questions.find(q => q.no ==
 check(n90q71?.answer === "BDGH" && Object.keys(n90q71?.options || {}).join("") === "ABCDEFGH", "90 年第 71 題必須保留 A–H 血型選項");
 const n90q77 = banks.find(bank => bank.year === 90)?.questions.find(q => q.no === 77);
 check(n90q77?.answer === "BF" && Object.keys(n90q77?.options || {}).join("") === "ABCDEF", "90 年第 77 題必須保留 A–F 雙欄選項");
+const n89q67 = banks.find(bank => bank.year === 89)?.questions.find(q => q.no === 67);
+check(n89q67?.answer === "BEJ" && Object.keys(n89q67?.options || {}).join("") === "ABCDEFGHIJKL", "89 年第 67 題必須保留 A–L 係數選項");
+const n89q68 = banks.find(bank => bank.year === 89)?.questions.find(q => q.no === 68);
+check(n89q68?.answer === "KN" && Object.keys(n89q68?.options || {}).join("") === "ABCDEFGHIJKLMNOPQRST", "89 年第 68 題必須保留 A–T 圖示區域選項");
 
 for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
@@ -201,7 +208,9 @@ check(/id="yearFilter"/.test(indexHtml), "首頁缺少年份篩選器");
 check(/data\/bank\.js/.test(indexHtml) && /data\/bank\.js/.test(checkHtml), "首頁與查題頁必須載入多年份 bank.js");
 check(/\\d\{2,3\}/.test(checkJs), "查題頁必須支援二至三位數學年度");
 check(/lookupCoverage/.test(checkHtml) && /Math\.min\(\.\.\.years\)/.test(checkJs), "查題頁收錄範圍必須由題庫年份動態產生");
-check(/q\.fullCredit/.test(fs.readFileSync(path.join(root, "app.js"), "utf8")), "練習頁必須支援官方全體給分題");
+const appJs = fs.readFileSync(path.join(root, "app.js"), "utf8");
+check(/q\.fullCredit/.test(appJs), "練習頁必須支援官方全體給分題");
+check(/match\(\/\[A-T\]\//.test(appJs), "練習頁必須支援 A–T 圖示選項答案");
 check(/q\.fullCredit/.test(checkJs), "查題頁必須支援官方全體給分題");
 
 const publicText = ["index.html", "check.html", "about.html", "privacy.html", "README.md", "manifest.json", "robots.txt", "sitemap.xml"]
@@ -216,6 +225,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );

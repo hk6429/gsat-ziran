@@ -36,7 +36,9 @@ function normalizeLegacyGlyphs(value) {
     "㉂":"自", "㉃":"至", "㊜":"適", "㊝":"優", "㊟":"注", "㊠":"項", "㊢":"寫",
     "㊧":"左", "㊨":"右", "㊞":"印", "㊰":"夜"
   };
-  return value.replace(/[㆒-㆟㈤-㈩㈪㈫㈬㈭㈮㈯㈰㈲㈳㈴㈵㈷㈹㈺㈻㈾㉂㉃㊜㊝㊟㊠㊢㊧㊨㊞㊰]/g, glyph => glyphs[glyph] || glyph);
+  return value
+    .replace(/[㆒-㆟㈤-㈩㈪㈫㈬㈭㈮㈯㈰㈲㈳㈴㈵㈷㈹㈺㈻㈾㉂㉃㊜㊝㊟㊠㊢㊧㊨㊞㊰]/g, glyph => glyphs[glyph] || glyph)
+    .normalize("NFKC");
 }
 
 function parseTranscript(html, no) {
@@ -45,7 +47,7 @@ function parseTranscript(html, no) {
     .filter(Boolean);
   if (!blocks.length) throw new Error(`第 ${no} 題找不到題幹`);
 
-  const optionPattern = /<li class="option-item"[^>]*data-label="([A-J])"[^>]*>[\s\S]*?<span class="option-label">[A-J]<\/span>([\s\S]*?)<\/li>/g;
+  const optionPattern = /<li class="option-item"[^>]*data-label="([A-T])"[^>]*>[\s\S]*?<span class="option-label">[A-T]<\/span>([\s\S]*?)<\/li>/g;
   const options = {};
   for (const match of html.matchAll(optionPattern)) {
     const content = match[2].match(/<span class="latex-content">([\s\S]*?)<\/span>/);
@@ -115,7 +117,7 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}, questionNum
       block = block.slice(0, group.index);
     }
     block = block.replace(/(?:二\s*、\s*多\s*選\s*題|三\s*、\s*綜\s*合\s*題|第\s*貳\s*部\s*分)[\s\S]*$/, "");
-    const optionMatches = [...block.matchAll(/\(\s*([A-J])\s*\)/g)];
+    const optionMatches = [...block.matchAll(/\(\s*([A-T])\s*\)/g)];
     if (optionMatches.length < 2) {
       const labels = imageOnlyQuestions[no];
       if (!labels?.length) throw new Error(`${year} 第 ${no} 題選項解析失敗`);
