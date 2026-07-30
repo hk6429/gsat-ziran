@@ -2,11 +2,13 @@
   "use strict";
 
   const $ = id => document.getElementById(id);
-  const bank = (window.BANK || [])[0];
-  if (!bank) {
+  const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
+  if (!banks.length) {
     document.body.innerHTML = '<p class="notice" style="margin:30px">題庫載入失敗，請重新整理頁面。</p>';
     return;
   }
+  const newestBank = banks[0];
+  const allQuestions = banks.flatMap(bank => bank.questions.map(q => ({ ...q, year:bank.year })));
 
   const storage = {
     get(key, fallback) {
@@ -47,6 +49,15 @@
     return [...document.querySelectorAll(".subject-filter:checked")].map(input => input.value);
   }
 
+  function selectedYear() {
+    return $("yearFilter").value;
+  }
+
+  function questionsForSelectedYear() {
+    const year = selectedYear();
+    return year === "all" ? allQuestions : allQuestions.filter(q => q.year === Number(year));
+  }
+
   function inDifficulty(q, value) {
     if (value === "all") return true;
     if (q.pass == null) return false;
@@ -61,7 +72,7 @@
     const type = $("typeFilter").value;
     const difficulty = $("difficultyFilter").value;
     const tag = $("tagFilter").value;
-    return bank.questions.filter(q =>
+    return questionsForSelectedYear().filter(q =>
       subjects.includes(q.cat) &&
       (type === "all" || (type === "single" && !q.multi && !q.written) ||
         (type === "multi" && q.multi) || (type === "written" && q.written)) &&
@@ -74,21 +85,34 @@
     const total = filteredPool().length;
     $("poolCount").textContent = `${total} 題`;
     $("startBtn").disabled = total === 0;
+    $("questionCount").max = Math.max(total, 1);
+    const year = selectedYear();
+    const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
+    $("fullExamBtn").textContent = `依 ${fullBank.year} 年原卷做完整 ${fullBank.questions.length} 題`;
   }
 
   function initFilters() {
-    $("questionTotal").textContent = bank.questions.length;
-    $("choiceTotal").textContent = bank.questions.filter(q => !q.written).length;
-    $("writtenTotal").textContent = bank.questions.filter(q => q.written).length;
-    $("statsTotal").textContent = bank.questions.filter(q => q.pass != null).length;
+    $("yearFilter").innerHTML =
+      banks.map(bank => `<option value="${bank.year}">${bank.year} 學年度</option>`).join("") +
+      '<option value="all">全部年份</option>';
 
-    const tags = [...new Set(bank.questions.flatMap(q => q.tags))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
+    const tags = [...new Set(allQuestions.flatMap(q => q.tags))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
     $("tagFilter").innerHTML = '<option value="all">全部主題</option>' +
       tags.map(tag => `<option value="${tag}">${tag}</option>`).join("");
 
-    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter")]
+    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("yearFilter")]
       .forEach(input => input.addEventListener("change", updatePoolCount));
+    $("yearFilter").addEventListener("change", updateStats);
+    updateStats();
     updatePoolCount();
+  }
+
+  function updateStats() {
+    const questions = questionsForSelectedYear();
+    $("questionTotal").textContent = questions.length;
+    $("choiceTotal").textContent = questions.filter(q => !q.written).length;
+    $("writtenTotal").textContent = questions.filter(q => q.written).length;
+    $("statsTotal").textContent = questions.filter(q => q.pass != null).length;
   }
 
   function questionCard(q, position) {
@@ -111,7 +135,7 @@
       answerArea = `<div class="options" role="${q.multi ? "group" : "radiogroup"}" aria-label="第 ${q.no} 題選項">` +
         Object.entries(q.options).map(([key, value]) => `
           <label class="option" data-key="${key}">
-            <input type="${type}" name="q${q.no}" value="${key}">
+            <input type="${type}" name="${q.id}" value="${key}">
             <span class="option-letter">${key}</span>
             <span class="option-text">${escapeHtml(value)}</span>
           </label>`).join("") +
@@ -126,7 +150,7 @@
           ${q.multi ? '<span class="pill pill-gold">多選</span>' : ""}
           ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
           ${passText}
-          <span class="question-no">115 年第 ${q.no} 題</span>
+          <span class="question-no">${q.year} 年第 ${q.no} 題</span>
         </div>
         ${passage}
         <p class="stem">${escapeHtml(q.stem)}</p>
@@ -142,7 +166,7 @@
       <details class="source-panel" ${q.written || emptyVisualOptions ? "open" : ""}>
         <summary>查看大考中心官方原卷題面${emptyVisualOptions ? "（本題含圖形選項）" : ""}</summary>
         <div class="source-pages">
-          ${q.pages.map((page, i) => `<img src="${page}" alt="115 學測自然第 ${q.no} 題官方原卷頁面${q.pages.length > 1 ? ` ${i + 1}` : ""}" loading="${i ? "lazy" : "eager"}">`).join("")}
+          ${q.pages.map((page, i) => `<img src="${page}" alt="${q.year} 學測自然第 ${q.no} 題官方原卷頁面${q.pages.length > 1 ? ` ${i + 1}` : ""}" loading="${i ? "lazy" : "eager"}">`).join("")}
         </div>
       </details>`;
 
@@ -241,8 +265,10 @@
   function startSession(mode = "filtered") {
     let pool = filteredPool();
     if (mode === "full") {
-      pool = [...bank.questions];
-      $("questionCount").value = 56;
+      const year = selectedYear();
+      const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
+      pool = fullBank.questions.map(q => ({ ...q, year:fullBank.year }));
+      $("questionCount").value = pool.length;
     }
     const count = Math.min(Math.max(Number($("questionCount").value) || 10, 1), pool.length);
     const order = $("orderFilter").value === "random" ? shuffle(pool) : pool;

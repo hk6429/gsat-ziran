@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const bank = (window.BANK || [])[0];
+  const banks = window.BANK || [];
   const input = document.getElementById("lookupInput");
   const result = document.getElementById("lookupResult");
 
@@ -11,18 +11,20 @@
   function render() {
     const match = input.value.trim().match(/(?:學[-－]?)?(\d{3})\s*[-－]\s*(\d{1,2})/);
     if (!match) {
-      result.innerHTML = '<p class="notice">格式請輸入「115-題號」，例如 115-38。</p>';
+      result.innerHTML = '<p class="notice">格式請輸入「學年度-題號」，例如 114-43 或 115-38。</p>';
       return;
     }
     const year = Number(match[1]);
     const no = Number(match[2]);
-    if (!bank || year !== bank.year) {
-      result.innerHTML = `<p class="notice">目前題庫完成 115 學年度；找不到 ${year} 年資料。</p>`;
+    const bank = banks.find(item => item.year === year);
+    if (!bank) {
+      const years = [...banks].sort((a, b) => b.year - a.year).map(item => item.year).join("、");
+      result.innerHTML = `<p class="notice">目前題庫完成 ${years} 學年度；找不到 ${year} 年資料。</p>`;
       return;
     }
     const q = bank.questions.find(item => item.no === no);
     if (!q) {
-      result.innerHTML = `<p class="notice">115 年沒有第 ${no} 題。有效題號為 1–56。</p>`;
+      result.innerHTML = `<p class="notice">${year} 年沒有第 ${no} 題。有效題號為 1–${bank.questions.length}。</p>`;
       return;
     }
     const answer = q.written ? q.referenceAnswer : String(q.answer).split("").join("、");
@@ -41,7 +43,7 @@
             ${q.tags.map(tag => `<span class="pill pill-blue">${escapeHtml(tag)}</span>`).join("")}
             ${q.multi ? '<span class="pill pill-gold">多選</span>' : ""}
             ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
-            <span class="question-no">115 年第 ${q.no} 題</span>
+            <span class="question-no">${year} 年第 ${q.no} 題</span>
           </div>
           ${q.passage ? `<div class="passage">${escapeHtml(q.passage)}</div>` : ""}
           <p class="stem">${escapeHtml(q.stem)}</p>
@@ -51,10 +53,10 @@
         </div>
         <details class="source-panel" open>
           <summary>大考中心官方原卷題面</summary>
-          <div class="source-pages">${q.pages.map(page => `<img src="${page}" alt="115 學測自然第 ${q.no} 題官方原卷頁面">`).join("")}</div>
+          <div class="source-pages">${q.pages.map(page => `<img src="${page}" alt="${year} 學測自然第 ${q.no} 題官方原卷頁面">`).join("")}</div>
         </details>
       </article>`;
-    history.replaceState(null, "", `?q=115-${no}`);
+    history.replaceState(null, "", `?q=${year}-${no}`);
   }
 
   document.getElementById("lookupBtn").addEventListener("click", render);

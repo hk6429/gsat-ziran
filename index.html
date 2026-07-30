@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>學測自然題庫｜115 學測自然考古題分類練習</title>
-  <meta name="description" content="免費練習大學學測自然科歷屆試題。首批收錄 115 學年度自然考科 56 題，含物理、化學、生物、地球科學與跨科整合，逐題對照大考中心官方試題、答案與統計。">
+  <title>學測自然題庫｜114–115 學測自然考古題分類練習</title>
+  <meta name="description" content="免費練習大學學測自然科歷屆試題。完整收錄 114–115 學年度共 113 題，含物理、化學、生物、地球科學與跨科整合，逐題對照大考中心官方試題、答案與統計。">
   <meta name="theme-color" content="#0b6b5c">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://gsat-ziran.vercel.app/">
@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="學測自然題庫｜歷屆試題分類練習">
-  <meta property="og:description" content="115 學測自然 56 題免費練，四科分類、混合題與非選擇題評分要點一次整理。">
+  <meta property="og:description" content="114–115 學測自然共 113 題免費練，四科分類、混合題與非選擇題評分要點一次整理。">
   <meta property="og:url" content="https://gsat-ziran.vercel.app/">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"學測自然題庫","url":"https://gsat-ziran.vercel.app/","inLanguage":"zh-Hant","description":"大學學測自然科歷屆試題分類練習網站，題目與答案依大考中心官方資料整理。"}
@@ -38,7 +38,7 @@
   <main class="shell">
     <section class="card control-card" id="controls">
       <h2 class="section-title">建立這次練習</h2>
-      <p class="section-note">目前完成 115 學年度第一個完整垂直切片。難度只使用大考中心選項分析中可直接確認的單選題答對率；多選題與非選擇題不以選項畫記率推估難度。</p>
+      <p class="section-note">目前完成 114–115 學年度兩個完整垂直切片。難度只使用大考中心選項分析中可直接確認的單選題答對率；多選題與非選擇題不以選項畫記率推估難度。</p>
 
       <div class="stats" aria-label="題庫統計">
         <div class="stat"><b id="questionTotal">56</b><span>題完整收錄</span></div>
@@ -48,6 +48,11 @@
       </div>
 
       <div class="filters">
+        <label class="field">
+          <span>學年度</span>
+          <select id="yearFilter"></select>
+        </label>
+
         <fieldset class="subject-grid field">
           <legend>科目</legend>
           <label class="subject-chip"><input class="subject-filter" type="checkbox" value="E" checked><span>地球科學</span></label>
@@ -84,7 +89,7 @@
 
         <label class="field">
           <span>題數</span>
-          <input id="questionCount" type="number" min="1" max="56" value="10" inputmode="numeric">
+          <input id="questionCount" type="number" min="1" max="57" value="10" inputmode="numeric">
         </label>
 
         <label class="field">
@@ -103,7 +108,7 @@
 
       <div class="actions">
         <button class="btn btn-primary" id="startBtn">開始練習</button>
-        <button class="btn btn-secondary" id="fullExamBtn">依原卷做完整 56 題</button>
+        <button class="btn btn-secondary" id="fullExamBtn">依所選年份做完整試卷</button>
       </div>
     </section>
 
@@ -133,7 +138,7 @@
     <div>題目、答案與統計資料以大考中心公告為準。本站為非營利學習整理，非大考中心官方網站。</div>
   </footer>
 
-  <script src="data/n115.js"></script>
+  <script src="data/bank.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
