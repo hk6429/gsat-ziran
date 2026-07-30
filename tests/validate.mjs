@@ -8,6 +8,7 @@ await import(pathToFileURL(path.join(root, "data", "bank.js")));
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
+  92: { total:68, choice:68, written:0, stats:67, imageRefs:68 },
   93: { total:68, choice:68, written:0, stats:65, imageRefs:68 },
   94: { total:68, choice:68, written:0, stats:67, imageRefs:68 },
   115: { total:56, choice:48, written:8, stats:30, imageRefs:65 },
@@ -51,11 +52,15 @@ function answersFromOfficialText(year) {
   if (year === 93) {
     for (const no of ["21", "23", "68"]) answers[no] = "FULL_CREDIT";
   }
+  if (year === 92) {
+    answers["21"] = "FULL_CREDIT";
+    answers["31"] = "A";
+  }
   return answers;
 }
 
-check(banks.length === 23, "題庫必須正好載入 93–115 二十三個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93", "題庫年份必須為 93–115");
+check(banks.length === 24, "題庫必須正好載入 92–115 二十四個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92", "題庫年份必須為 92–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -117,7 +122,7 @@ for (const bank of banks) {
       check(/^[A-J]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
       const optionKeys = Object.keys(q.options).join("");
       check(optionKeys === "ABCDEFGHIJ".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
-      if (bank.year >= 93 && bank.year <= 104) {
+      if (bank.year >= 92 && bank.year <= 104) {
         check(Object.values(q.options).every(option => typeof option === "string" && option.trim()), `${bank.year} 第 ${q.no} 題不可有空白選項`);
       }
       check(q.multi === (q.answer.length > 1), `${bank.year} 第 ${q.no} 題 multi 與答案數量不一致`);
@@ -159,6 +164,12 @@ for (const no of [21, 23, 68]) {
   const q = banks.find(bank => bank.year === 93)?.questions.find(question => question.no === no);
   check(q?.fullCredit === true && q?.answer === "", `93 年第 ${no} 題必須保留官方全體給分狀態`);
 }
+const n92q21 = banks.find(bank => bank.year === 92)?.questions.find(q => q.no === 21);
+check(n92q21?.fullCredit === true && n92q21?.answer === "" && n92q21?.pass == null, "92 年第 21 題必須保留官方無答案／全體給分狀態");
+const n92q31 = banks.find(bank => bank.year === 92)?.questions.find(q => q.no === 31);
+check(n92q31?.answer === "A" && n92q31?.alternateAnswers?.join(",") === "B", "92 年第 31 題必須保留官方 A 或 B 雙答案");
+const n92q36 = banks.find(bank => bank.year === 92)?.questions.find(q => q.no === 36);
+check(Object.keys(n92q36?.options || {}).join("") === "ABCD", "92 年第 36 題必須保留四個官方圖示選項");
 
 for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
@@ -185,6 +196,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
