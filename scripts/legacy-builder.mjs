@@ -71,6 +71,7 @@ function cleanPdfText(value) {
   let text = normalizeLegacyGlyphs(value)
     .replace(/\f/g, "\n")
     .replace(/(?:^|\n)\s*(?:第\s*\d+\s*頁\s*\d+年學測|\d+年學測\s*第\s*\d+\s*頁|自然考科\s*共\s*\d+\s*頁|共\s*\d+\s*頁\s*自然考科|-\s*\d+\s*-)\s*(?=\n|$)/g, "\n")
+    .replace(/(?:自然考科\s*)?第\s*\d+\s*頁\s*(?:自然考科\s*)?共\s*\d+\s*頁|自然考科\s*共\s*\d+\s*頁\s*第\s*\d+\s*頁/g, " ")
     .replace(/\d{2,3}\s*學年度\s*第\s*\d+\s*頁/g, " ")
     .replace(/第\s*\d+\s*頁\s*\d{2,3}\s*學年度/g, " ")
     .replace(/[ \t]+\n/g, "\n");

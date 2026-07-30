@@ -3,6 +3,9 @@
   const banks = window.BANK || [];
   const input = document.getElementById("lookupInput");
   const result = document.getElementById("lookupResult");
+  const years = banks.map(bank => bank.year);
+  document.getElementById("lookupCoverage").textContent =
+    `本頁可核對 ${Math.min(...years)}–${Math.max(...years)} 學年度題目`;
 
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"

@@ -31,6 +31,7 @@
 
   const subjectOrder = ["E", "P", "C", "B", "X"];
   const subjectNames = { E:"地球科學", P:"物理", C:"化學", B:"生物", X:"跨科整合" };
+  const filterDetails = $("filterDetails");
 
   function shuffle(items) {
     const result = [...items];
@@ -89,6 +90,35 @@
     const year = selectedYear();
     const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
     $("fullExamBtn").textContent = `依 ${fullBank.year} 年原卷做完整 ${fullBank.questions.length} 題`;
+    updateFilterSummary(total);
+  }
+
+  function updateCoverageCopy() {
+    const years = banks.map(bank => bank.year);
+    const oldestYear = Math.min(...years);
+    const newestYear = Math.max(...years);
+    const yearRange = `${oldestYear}–${newestYear}`;
+    const questionCount = allQuestions.length.toLocaleString("zh-TW");
+    const description = `免費練習大學學測自然科 ${yearRange} 學年度歷屆試題，共 ${questionCount} 題，含物理、化學、生物、地球科學與跨科整合，逐題對照大考中心官方資料。`;
+
+    document.title = `學測自然題庫｜${yearRange} 學測自然考古題分類練習`;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", `${yearRange} 學測自然共 ${questionCount} 題免費練，四科分類、混合題與非選擇題評分要點一次整理。`);
+    $("coverageTitle").textContent = `涵蓋 ${yearRange} 學年度・${questionCount} 題`;
+    $("quickStartHint").textContent = `不知道先練什麼？直接從 ${banks.length} 個學年度、五大科目隨機抽題；想加強特定範圍，再展開下方篩選。`;
+  }
+
+  function updateFilterSummary(total = filteredPool().length) {
+    const yearText = selectedYear() === "all" ? "全部年份" : `${selectedYear()} 學年度`;
+    const subjects = selectedSubjects();
+    const subjectText = subjects.length === subjectOrder.length
+      ? "全科"
+      : subjects.map(subject => subjectNames[subject]).join("、") || "未選科目";
+    const typeText = $("typeFilter").selectedOptions[0]?.textContent || "全部題型";
+    const tagText = $("tagFilter").value === "all" ? "全部主題" : $("tagFilter").value;
+    const difficultyText = $("difficultyFilter").selectedOptions[0]?.textContent || "不限難度";
+    const orderText = $("orderFilter").value === "random" ? "隨機出題" : "原卷順序";
+    $("filterSummary").textContent = `${yearText}・${subjectText}・${typeText}・${tagText}・${difficultyText}・抽 ${$("questionCount").value || 10} 題・${orderText}（符合 ${total} 題）`;
   }
 
   function initFilters() {
@@ -100,9 +130,14 @@
     $("tagFilter").innerHTML = '<option value="all">全部主題</option>' +
       tags.map(tag => `<option value="${tag}">${tag}</option>`).join("");
 
-    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("yearFilter")]
+    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("yearFilter"), $("orderFilter")]
       .forEach(input => input.addEventListener("change", updatePoolCount));
+    $("questionCount").addEventListener("input", () => updateFilterSummary());
     $("yearFilter").addEventListener("change", updateStats);
+    filterDetails.addEventListener("toggle", () => {
+      $("filterToggleLabel").textContent = filterDetails.open ? "收合進階篩選" : "展開進階篩選";
+    });
+    updateCoverageCopy();
     updateStats();
     updatePoolCount();
   }
