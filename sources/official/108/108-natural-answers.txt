@@ -1,0 +1,26 @@
+                108 學年度學科能力測驗
+                 自然考科選擇題答案
+
+
+題號   答案    題號      答案    題號   答案    題號   答案
+1     B    21      AD    41   CD    61   BCD
+2     C    22      BCE   42   BDE   62   BE
+3    D     23      CE    43   BD    63   D
+4     B    24      AC    44     D   64    E
+5    D     25      CD    45     A   65   A
+6     E    26      AD    46     A   66    C
+7    D     27      ADE   47   BCE   67   BC
+8    D     28      BC    48     E   68   ADE
+9     C    29      ACE   49     E
+10    E    30      AE    50     C
+11    B    31      BCD   51     A
+12    B    32      AD    52   BD
+13    E    33      ABD   53     D
+14    C    34      BCE   54     C
+15   A     35       B    55     B
+16    B    36      A     56     A
+17   ACD   37      D     57     B
+18   BD    38      A     58     D
+19   BD    39      D     59     D
+20   CE    40      CE    60     D
+
