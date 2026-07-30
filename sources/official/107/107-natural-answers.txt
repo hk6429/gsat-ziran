@@ -1,0 +1,28 @@
+               107 學年度學科能力測驗
+                自然考科選擇題答案
+
+
+
+題號   答案   題號      答案    題號   答案    題號   答案
+
+1    C    21       C    41     E   61   BD
+2    A    22       C    42     D   62   BDE
+3    B    23      A     43     A   63   B
+4    D    24      CD    44     D   64   B
+5    E    25      ABE   45   BCD   65   AE
+6    C    26      AD    46   ABC   66   D
+7    B    27      ADE   47   AE    67   CE
+8    B    28      CD    48   ADE   68   BE
+9    A    29      BC    49   BE
+10   D    30      BE    50     C
+11   C    31      AC    51   BCE
+12   E    32      BE    52     F
+13   B    33      CE    53     A
+14   A    34      ACD   54   CE
+15   E    35      BD    55     D
+16   E    36      ABD   56     C
+17   A    37       E    57     A
+18   C    38       B    58     E
+19   A    39      A     59     E
+20   A    40      AE    60     A
+
