@@ -25,13 +25,27 @@ function textFromHtml(value) {
     .trim();
 }
 
+function normalizeLegacyGlyphs(value) {
+  const glyphs = {
+    "㆒":"一", "㆓":"二", "㆔":"三", "㆕":"四",
+    "㆖":"上", "㆗":"中", "㆘":"下", "㆙":"甲", "㆚":"乙", "㆛":"丙", "㆜":"丁",
+    "㆝":"天", "㆞":"地", "㆟":"人",
+    "㈤":"五", "㈥":"六", "㈦":"七", "㈧":"八", "㈨":"九", "㈩":"十",
+    "㈪":"月", "㈫":"火", "㈬":"水", "㈮":"金", "㈰":"日", "㈲":"有",
+    "㈳":"社", "㈴":"名", "㈵":"特", "㈷":"祝", "㈹":"代", "㈺":"呼", "㈻":"學", "㈾":"資",
+    "㉂":"自", "㉃":"至", "㊜":"適", "㊝":"優", "㊟":"注", "㊠":"項", "㊢":"寫",
+    "㊧":"左", "㊨":"右"
+  };
+  return value.replace(/[㆒-㆟㈤-㈩㈪㈫㈬㈮㈰㈲㈳㈴㈵㈷㈹㈺㈻㈾㉂㉃㊜㊝㊟㊠㊢㊧㊨]/g, glyph => glyphs[glyph] || glyph);
+}
+
 function parseTranscript(html, no) {
   const blocks = [...html.matchAll(/<div class="question-text"[^>]*>\s*<span class="latex-content">([\s\S]*?)<\/span>\s*<\/div>/g)]
     .map(match => textFromHtml(match[1]))
     .filter(Boolean);
   if (!blocks.length) throw new Error(`第 ${no} 題找不到題幹`);
 
-  const optionPattern = /<li class="option-item"[^>]*data-label="([A-I])"[^>]*>[\s\S]*?<span class="option-label">[A-I]<\/span>([\s\S]*?)<\/li>/g;
+  const optionPattern = /<li class="option-item"[^>]*data-label="([A-J])"[^>]*>[\s\S]*?<span class="option-label">[A-J]<\/span>([\s\S]*?)<\/li>/g;
   const options = {};
   for (const match of html.matchAll(optionPattern)) {
     const content = match[2].match(/<span class="latex-content">([\s\S]*?)<\/span>/);
@@ -54,7 +68,7 @@ function ability(transcript) {
 }
 
 function cleanPdfText(value) {
-  let text = value
+  let text = normalizeLegacyGlyphs(value)
     .replace(/\f/g, "\n")
     .replace(/(?:^|\n)\s*(?:第\s*\d+\s*頁\s*\d+年學測|\d+年學測\s*第\s*\d+\s*頁|自然考科\s*共\s*\d+\s*頁|共\s*\d+\s*頁\s*自然考科|-\s*\d+\s*-)\s*(?=\n|$)/g, "\n")
     .replace(/\d{2,3}\s*學年度\s*第\s*\d+\s*頁/g, " ")
@@ -67,8 +81,9 @@ function cleanPdfText(value) {
 }
 
 function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
-  const firstSection = raw.search(/第\s*壹\s*部\s*分/);
-  const source = firstSection >= 0 ? raw.slice(firstSection) : raw;
+  const normalizedRaw = normalizeLegacyGlyphs(raw);
+  const firstSection = normalizedRaw.search(/第\s*壹\s*部\s*分/);
+  const source = firstSection >= 0 ? normalizedRaw.slice(firstSection) : normalizedRaw;
   const allMarkers = [...source.matchAll(/(?:^|\n)\s*(\d{1,2}|\d\s+\d)\s*\.\s*/gm)]
     .map(marker => {
       marker.questionNo = Number(marker[1].replace(/\s/g, ""));
@@ -99,7 +114,7 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
       block = block.slice(0, group.index);
     }
     block = block.replace(/(?:二\s*、\s*多\s*選\s*題|三\s*、\s*綜\s*合\s*題|第\s*貳\s*部\s*分)[\s\S]*$/, "");
-    const optionMatches = [...block.matchAll(/\(\s*([A-I])\s*\)/g)];
+    const optionMatches = [...block.matchAll(/\(\s*([A-J])\s*\)/g)];
     if (optionMatches.length < 2) {
       const labels = imageOnlyQuestions[no];
       if (!labels?.length) throw new Error(`${year} 第 ${no} 題選項解析失敗`);
