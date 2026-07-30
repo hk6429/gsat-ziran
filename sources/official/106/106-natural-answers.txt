@@ -1,0 +1,26 @@
+           106 學年度學科能力測驗
+               自然考科選擇題答案
+
+
+題號   答案   題號    答案    題號   答案    題號   答案
+1    C    21     E    41   AC    61   A
+2    B    22     D    42   ABC   62   CD
+3    A    23     AB   43   DE    63   BCD
+4    E    24    ADE   44    B    64   ACD
+5    C    25     BC   45   ACD   65   ACD
+6    D    26    ACE   46    C    66   D
+7    B    27     AC   47   DE    67   BD
+8    E    28     BC   48    E    68   AC
+9    A    29    ABE   49   ABC
+10   D    30    ABE   50   BC
+11   B    31     AD   51   AD
+12   D    32     CE   52   A
+13   D    33     DE   53   ABC
+14   E    34     AB   54   D
+15   D    35    ABD   55   D
+16   C    36    ABC   56    E
+17   B    37     A    57    C
+18   B    38     E    58    E
+19   A    39     A    59   AC
+20   A    40     CD   60   CE
+
