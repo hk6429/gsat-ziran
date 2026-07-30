@@ -15,6 +15,7 @@ function decode(value) {
 
 function textFromHtml(value) {
   return decode(value)
+    .replace(/<img\b[^>]*>/gi, " [圖，請參照官方原卷] ")
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/p>/gi, "\n")
     .replace(/<[^>]+>/g, "")
@@ -54,7 +55,7 @@ function ability(transcript) {
 
 export async function buildLegacy(config) {
   const {
-    year, duration, transcriptBase, topics, category, pageRanges, singlePass, official
+    year, duration, transcriptBase, learnModeId, topics, category, pageRanges, singlePass, official
   } = config;
   const answerKey = JSON.parse(await fs.readFile(
     path.join(root, "sources", "official", String(year), "answer-key.json"),
@@ -67,11 +68,27 @@ export async function buildLegacy(config) {
     return parseTranscript(await response.text(), no);
   };
 
-  const transcripts = [];
-  for (let start = 1; start <= 68; start += 8) {
-    const batch = [];
-    for (let no = start; no < Math.min(start + 8, 69); no += 1) batch.push(fetchQuestion(no));
-    transcripts.push(...await Promise.all(batch));
+  let transcripts = [];
+  if (learnModeId) {
+    const response = await fetch(`https://www.learnmode.net/api/flip/qiz/${learnModeId}`);
+    if (!response.ok) throw new Error(`學習吧轉錄 API HTTP ${response.status}`);
+    const payload = await response.json();
+    const questions = Object.values(payload.result?.questions || {}).sort((a, b) => Number(a.no) - Number(b.no));
+    if (questions.length !== 68) throw new Error(`學習吧轉錄題數不符：${questions.length}`);
+    transcripts = questions.map(question => {
+      const options = {};
+      question.options.forEach((option, index) => {
+        const label = String.fromCharCode(65 + index);
+        options[label] = textFromHtml(option.title) || "圖示選項（請參照官方原卷）";
+      });
+      return { stem: textFromHtml(question.title), options };
+    });
+  } else {
+    for (let start = 1; start <= 68; start += 8) {
+      const batch = [];
+      for (let no = start; no < Math.min(start + 8, 69); no += 1) batch.push(fetchQuestion(no));
+      transcripts.push(...await Promise.all(batch));
+    }
   }
 
   const questions = transcripts.map((transcript, index) => {

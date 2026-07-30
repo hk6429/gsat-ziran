@@ -1,0 +1,25 @@
+           104 學年度學科能力測驗
+               自然考科選擇題答案
+
+題號   答案   題號    答案    題號   答案    題號   答案
+1    C    21     E    41    C    61   ABC
+2    E    22     D    42    B    62    E
+3    D    23     E    43    E    63    B
+4    A    24    BCE   44   D     64    C
+5    D    25     DE   45   D     65   AB
+6    D    26    ABC   46    E    66    C
+7    A    27     AE   47   A     67   BD
+8    D    28     AD   48    E    68    F
+9    D    29     AC   49   CD
+10   E    30     BE   50   ACD
+11   B    31     AD   51    C
+12   B    32    ACD   52    B
+13   B    33     AB   53   ABD
+14   D    34     AC   54    B
+15   E    35     AD   55   BCE
+16   D    36    CDE   56   ACD
+17   C    37    ADE   57   CDE
+18   D    38     C    58    C
+19   D    39     BE   59   ACE
+20   B    40     AC   60   D
+
