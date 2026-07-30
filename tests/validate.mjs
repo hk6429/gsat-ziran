@@ -25,7 +25,8 @@ const expected = {
   101: { total:68, choice:68, written:0, stats:47, imageRefs:68 },
   100: { total:68, choice:68, written:0, stats:45, imageRefs:68 },
   99: { total:68, choice:68, written:0, stats:50, imageRefs:68 },
-  98: { total:68, choice:68, written:0, stats:60, imageRefs:68 }
+  98: { total:68, choice:68, written:0, stats:60, imageRefs:68 },
+  97: { total:68, choice:68, written:0, stats:52, imageRefs:68 }
 };
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
@@ -43,8 +44,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 18, "題庫必須正好載入 98–115 十八個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98", "題庫年份必須為 98–115");
+check(banks.length === 19, "題庫必須正好載入 97–115 十九個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97", "題庫年份必須為 97–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -96,7 +97,7 @@ for (const bank of banks) {
       check(/^[A-I]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
       const optionKeys = Object.keys(q.options).join("");
       check(optionKeys === "ABCDEFGHI".slice(0, optionKeys.length) && optionKeys.length >= 2, `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
-      if (bank.year >= 98 && bank.year <= 104) {
+      if (bank.year >= 97 && bank.year <= 104) {
         check(Object.values(q.options).every(option => typeof option === "string" && option.trim()), `${bank.year} 第 ${q.no} 題不可有空白選項`);
       }
       check(q.multi === (q.answer.length > 1), `${bank.year} 第 ${q.no} 題 multi 與答案數量不一致`);
@@ -142,6 +143,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
