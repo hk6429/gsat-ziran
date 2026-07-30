@@ -81,7 +81,7 @@ function cleanPdfText(value) {
   return text.replace(/\s+/g, " ").trim();
 }
 
-function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
+function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}, questionNumbers = Array.from({ length: 68 }, (_, index) => index + 1)) {
   const normalizedRaw = normalizeLegacyGlyphs(raw);
   const firstSection = normalizedRaw.search(/第\s*壹\s*部\s*分/);
   const source = firstSection >= 0 ? normalizedRaw.slice(firstSection) : normalizedRaw;
@@ -96,7 +96,7 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
   const markers = firstQuestion >= 0 ? allMarkers.slice(firstQuestion) : allMarkers;
   const selected = [];
   let markerPosition = 0;
-  for (let no = 1; no <= 68; no += 1) {
+  for (const no of questionNumbers) {
     const index = markers.findIndex((marker, i) => i >= markerPosition && marker.questionNo === no);
     if (index < 0) throw new Error(`${year} 官方文字層缺少第 ${no} 題`);
     selected.push(markers[index]);
@@ -105,7 +105,7 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
 
   const passages = {};
   return selected.map((marker, index) => {
-    const no = index + 1;
+    const no = questionNumbers[index];
     let block = source.slice(marker.index + marker[0].length, selected[index + 1]?.index ?? source.length);
     const group = block.match(/(?:(\d{1,2})\s*[-~～]\s*(\d{1,2})\s*題?\s*為\s*題\s*組|請\s*閱\s*讀[\s\S]*?回\s*答\s*第\s*(\d{1,2})\s*[-~～]\s*(\d{1,2})\s*題)[\s\S]*$/);
     if (group) {
@@ -139,7 +139,8 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
 
 export async function buildLegacy(config) {
   const {
-    year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, transcriptOverrides = {}, topics, category, pageRanges, singlePass, official
+    year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, transcriptOverrides = {}, topics, category, pageRanges,
+    singlePass = {}, questionNumbers = Array.from({ length: 68 }, (_, index) => index + 1), official
   } = config;
   const answerKey = JSON.parse(await fs.readFile(
     path.join(root, "sources", "official", String(year), "answer-key.json"),
@@ -155,13 +156,13 @@ export async function buildLegacy(config) {
   let transcripts = [];
   if (officialTextFile) {
     const raw = await fs.readFile(path.join(root, officialTextFile), "utf8");
-    transcripts = parseOfficialTranscript(raw, year, imageOnlyQuestions);
+    transcripts = parseOfficialTranscript(raw, year, imageOnlyQuestions, questionNumbers);
   } else if (learnModeId) {
     const response = await fetch(`https://www.learnmode.net/api/flip/qiz/${learnModeId}`);
     if (!response.ok) throw new Error(`學習吧轉錄 API HTTP ${response.status}`);
     const payload = await response.json();
     const questions = Object.values(payload.result?.questions || {}).sort((a, b) => Number(a.no) - Number(b.no));
-    if (questions.length !== 68) throw new Error(`學習吧轉錄題數不符：${questions.length}`);
+    if (questions.length !== questionNumbers.length) throw new Error(`學習吧轉錄題數不符：${questions.length}`);
     transcripts = questions.map(question => {
       const options = {};
       question.options.forEach((option, index) => {
@@ -171,19 +172,18 @@ export async function buildLegacy(config) {
       return { stem: textFromHtml(question.title), options };
     });
   } else {
-    for (let start = 1; start <= 68; start += 8) {
-      const batch = [];
-      for (let no = start; no < Math.min(start + 8, 69); no += 1) batch.push(fetchQuestion(no));
+    for (let start = 0; start < questionNumbers.length; start += 8) {
+      const batch = questionNumbers.slice(start, start + 8).map(fetchQuestion);
       transcripts.push(...await Promise.all(batch));
     }
   }
   transcripts = transcripts.map((transcript, index) => ({
     ...transcript,
-    ...(transcriptOverrides[index + 1] || {})
+    ...(transcriptOverrides[questionNumbers[index]] || {})
   }));
 
   const questions = transcripts.map((transcript, index) => {
-    const no = index + 1;
+    const no = questionNumbers[index];
     const cat = category(no);
     const officialAnswer = answerKey.answers[String(no)];
     const fullCredit = officialAnswer === "FULL_CREDIT";
@@ -213,7 +213,7 @@ export async function buildLegacy(config) {
     era: "學測",
     subject: "自然",
     duration,
-    questionCount: 68,
+    questionCount: questionNumbers.length,
     official: { ...official, answers: answerKey.url },
     questions
   };
