@@ -9,9 +9,9 @@
   })[char]);
 
   function render() {
-    const match = input.value.trim().match(/(?:學[-－]?)?(\d{3})\s*[-－]\s*(\d{1,2})/);
+    const match = input.value.trim().match(/^(?:學[-－]?)?(\d{2,3})\s*[-－]\s*(\d{1,2})$/);
     if (!match) {
-      result.innerHTML = '<p class="notice">格式請輸入「學年度-題號」，例如 114-43 或 115-38。</p>';
+      result.innerHTML = '<p class="notice">格式請輸入「學年度-題號」，例如 99-49 或 115-38。</p>';
       return;
     }
     const year = Number(match[1]);

@@ -31,7 +31,7 @@ function parseTranscript(html, no) {
     .filter(Boolean);
   if (!blocks.length) throw new Error(`第 ${no} 題找不到題幹`);
 
-  const optionPattern = /<li class="option-item"[^>]*data-label="([A-F])"[^>]*>[\s\S]*?<span class="option-label">[A-F]<\/span>([\s\S]*?)<\/li>/g;
+  const optionPattern = /<li class="option-item"[^>]*data-label="([A-I])"[^>]*>[\s\S]*?<span class="option-label">[A-I]<\/span>([\s\S]*?)<\/li>/g;
   const options = {};
   for (const match of html.matchAll(optionPattern)) {
     const content = match[2].match(/<span class="latex-content">([\s\S]*?)<\/span>/);
@@ -67,15 +67,19 @@ function cleanPdfText(value) {
 function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
   const firstSection = raw.search(/第\s*壹\s*部\s*分/);
   const source = firstSection >= 0 ? raw.slice(firstSection) : raw;
-  const allMarkers = [...source.matchAll(/(?:^|\n)\s*(\d{1,2})\.\s*/gm)];
+  const allMarkers = [...source.matchAll(/(?:^|\n)\s*(\d{1,2}|\d\s+\d)\s*\.\s*/gm)]
+    .map(marker => {
+      marker.questionNo = Number(marker[1].replace(/\s/g, ""));
+      return marker;
+    });
   const firstQuestion = allMarkers.findIndex((marker, index) => (
-    Number(marker[1]) === 1 && Number(allMarkers[index + 1]?.[1]) === 2
+    marker.questionNo === 1 && allMarkers[index + 1]?.questionNo === 2
   ));
   const markers = firstQuestion >= 0 ? allMarkers.slice(firstQuestion) : allMarkers;
   const selected = [];
   let markerPosition = 0;
   for (let no = 1; no <= 68; no += 1) {
-    const index = markers.findIndex((marker, i) => i >= markerPosition && Number(marker[1]) === no);
+    const index = markers.findIndex((marker, i) => i >= markerPosition && marker.questionNo === no);
     if (index < 0) throw new Error(`${year} 官方文字層缺少第 ${no} 題`);
     selected.push(markers[index]);
     markerPosition = index + 1;
@@ -85,13 +89,15 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
   return selected.map((marker, index) => {
     const no = index + 1;
     let block = source.slice(marker.index + marker[0].length, selected[index + 1]?.index ?? source.length);
-    const group = block.match(/(\d{1,2}\s*[-~～]\s*\d{1,2}\s*為\s*題\s*組[\s\S]*)$/);
+    const group = block.match(/(?:(\d{1,2})\s*[-~～]\s*(\d{1,2})\s*題?\s*為\s*題\s*組|請\s*閱\s*讀[\s\S]*?回\s*答\s*第\s*(\d{1,2})\s*[-~～]\s*(\d{1,2})\s*題)[\s\S]*$/);
     if (group) {
-      passages[no + 1] = cleanPdfText(group[1]);
+      const start = Number(group[1] || group[3]);
+      const end = Number(group[2] || group[4]);
+      for (let target = start; target <= end; target += 1) passages[target] = cleanPdfText(group[0]);
       block = block.slice(0, group.index);
     }
     block = block.replace(/(?:二\s*、\s*多\s*選\s*題|三\s*、\s*綜\s*合\s*題|第\s*貳\s*部\s*分)[\s\S]*$/, "");
-    const optionMatches = [...block.matchAll(/\(([A-F])\)/g)];
+    const optionMatches = [...block.matchAll(/\(\s*([A-I])\s*\)/g)];
     if (optionMatches.length < 2) {
       const labels = imageOnlyQuestions[no];
       if (!labels?.length) throw new Error(`${year} 第 ${no} 題選項解析失敗`);
@@ -115,7 +121,7 @@ function parseOfficialTranscript(raw, year, imageOnlyQuestions = {}) {
 
 export async function buildLegacy(config) {
   const {
-    year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, topics, category, pageRanges, singlePass, official
+    year, duration, transcriptBase, learnModeId, officialTextFile, imageOnlyQuestions, transcriptOverrides = {}, topics, category, pageRanges, singlePass, official
   } = config;
   const answerKey = JSON.parse(await fs.readFile(
     path.join(root, "sources", "official", String(year), "answer-key.json"),
@@ -153,6 +159,10 @@ export async function buildLegacy(config) {
       transcripts.push(...await Promise.all(batch));
     }
   }
+  transcripts = transcripts.map((transcript, index) => ({
+    ...transcript,
+    ...(transcriptOverrides[index + 1] || {})
+  }));
 
   const questions = transcripts.map((transcript, index) => {
     const no = index + 1;
