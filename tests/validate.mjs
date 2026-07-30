@@ -10,7 +10,8 @@ const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 const expected = {
   115: { total:56, choice:48, written:8, stats:30, imageRefs:65 },
   114: { total:57, choice:48, written:9, stats:21, imageRefs:70 },
-  113: { total:56, choice:48, written:8, stats:22, imageRefs:60 }
+  113: { total:56, choice:48, written:8, stats:22, imageRefs:60 },
+  112: { total:60, choice:52, written:8, stats:31, imageRefs:63 }
 };
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
@@ -21,15 +22,15 @@ function answersFromOfficialText(year) {
   const text = fs.readFileSync(filename, "utf8");
   const answers = {};
   for (const line of text.split("\n")) {
-    for (const match of line.matchAll(/(\d{1,2})\s+([A-E]+|／)/g)) {
+    for (const match of line.matchAll(/(\d{1,2})\s+([A-F]+|／)/g)) {
       answers[match[1]] = match[2] === "／" ? null : match[2];
     }
   }
   return answers;
 }
 
-check(banks.length === 3, "題庫必須正好載入 113、114、115 三個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113", "題庫年份必須為 115、114、113");
+check(banks.length === 4, "題庫必須正好載入 112、113、114、115 四個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112", "題庫年份必須為 115、114、113、112");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -78,8 +79,8 @@ for (const bank of banks) {
       check(q.answer == null, `${bank.year} 第 ${q.no} 題非選擇題不應有選項答案`);
       check(typeof q.referenceAnswer === "string" && q.referenceAnswer.length > 8, `${bank.year} 第 ${q.no} 題缺官方評分要點`);
     } else {
-      check(/^[A-E]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
-      check(Object.keys(q.options).join("") === "ABCDE", `${bank.year} 第 ${q.no} 題選項必須保持 A–E 順序`);
+      check(/^[A-F]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
+      check(/^ABCDE(?:F)?$/.test(Object.keys(q.options).join("")), `${bank.year} 第 ${q.no} 題選項必須保持 A–E 或 A–F 順序`);
       check(q.multi === (q.answer.length > 1), `${bank.year} 第 ${q.no} 題 multi 與答案數量不一致`);
       totalOfficialMatches += q.answer === official ? 1 : 0;
     }
@@ -116,6 +117,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );

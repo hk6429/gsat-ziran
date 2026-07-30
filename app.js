@@ -316,6 +316,18 @@
   }
 
   $("startBtn").addEventListener("click", () => startSession("filtered"));
+  $("quickStartBtn").addEventListener("click", () => {
+    document.querySelectorAll(".subject-filter").forEach(input => { input.checked = true; });
+    $("yearFilter").value = "all";
+    $("typeFilter").value = "all";
+    $("tagFilter").value = "all";
+    $("difficultyFilter").value = "all";
+    $("questionCount").value = 10;
+    $("orderFilter").value = "random";
+    updateStats();
+    updatePoolCount();
+    startSession("filtered");
+  });
   $("fullExamBtn").addEventListener("click", () => startSession("full"));
   $("restartBtn").addEventListener("click", () => {
     $("summary").classList.remove("show");

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>學測自然題庫｜113–115 學測自然考古題分類練習</title>
-  <meta name="description" content="免費練習大學學測自然科歷屆試題。完整收錄 113–115 學年度共 169 題，含物理、化學、生物、地球科學與跨科整合，逐題對照大考中心官方試題、答案與統計。">
+  <title>學測自然題庫｜112–115 學測自然考古題分類練習</title>
+  <meta name="description" content="免費練習大學學測自然科歷屆試題。完整收錄 112–115 學年度共 229 題，含物理、化學、生物、地球科學與跨科整合，逐題對照大考中心官方試題、答案與統計。">
   <meta name="theme-color" content="#0b6b5c">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://gsat-ziran.vercel.app/">
@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="學測自然題庫｜歷屆試題分類練習">
-  <meta property="og:description" content="113–115 學測自然共 169 題免費練，四科分類、混合題與非選擇題評分要點一次整理。">
+  <meta property="og:description" content="112–115 學測自然共 229 題免費練，四科分類、混合題與非選擇題評分要點一次整理。">
   <meta property="og:url" content="https://gsat-ziran.vercel.app/">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"學測自然題庫","url":"https://gsat-ziran.vercel.app/","inLanguage":"zh-Hant","description":"大學學測自然科歷屆試題分類練習網站，題目與答案依大考中心官方資料整理。"}
@@ -24,21 +24,40 @@
   <a class="skip-link" href="#controls">跳到選題區</a>
   <header class="hero">
     <div class="hero-inner">
-      <div class="eyebrow">大考中心官方資料整理・免註冊</div>
-      <h1>把自然科考古題，<br><span>練成會遷移的能力。</span></h1>
-      <p>依物理、化學、生物、地球科學與跨科整合選題。每題保留大考中心官方原卷題面；選擇題即時核對，非選擇題可對照滿分參考答案與評分要點。</p>
-      <div class="hero-actions">
-        <a class="btn btn-ghost" href="#controls">開始選題</a>
-        <a class="btn btn-ghost" href="check.html">查題校對</a>
-        <a class="btn btn-ghost" href="about.html">資料來源與分類</a>
+      <div class="hero-mark" aria-hidden="true">
+        <span>H₂O</span><span>F＝ma</span><span>DNA</span><span>🌏</span>
       </div>
+      <div class="eyebrow">大考中心官方資料整理・免註冊</div>
+      <h1>學測自然題庫</h1>
+      <p>大學學測歷屆自然科考古題・分類練習系統</p>
+      <nav class="hero-nav" aria-label="主要導覽">
+        <a href="#controls">選擇範圍</a>
+        <a href="check.html">查題校對</a>
+        <a href="about.html">資料來源與分類</a>
+      </nav>
     </div>
   </header>
 
   <main class="shell">
+    <section class="intro-box" aria-labelledby="introTitle">
+      <h2 id="introTitle">涵蓋 112–115 學年度・229 題官方試題</h2>
+      <p><strong>這是什麼？</strong>從歷屆學測自然科試題中，依年份、科目、題型與主題挑題練習，選擇題可立即核對答案，非選擇題可對照大考中心參考答案與評分要點。</p>
+      <p>每題保留官方原卷題面；難度只採可直接確認的單選題官方答對率，不拿多選題選項畫記率推估整題難度。</p>
+    </section>
+
+    <section class="quick-start" aria-label="快速開始">
+      <button class="btn btn-primary" id="quickStartBtn">立即開始・隨機 10 題</button>
+      <p>不知道先練什麼？直接從四個學年度、五大科目隨機抽題；想加強特定範圍，再展開下方篩選。</p>
+    </section>
+
     <section class="card control-card" id="controls">
-      <h2 class="section-title">建立這次練習</h2>
-      <p class="section-note">目前完成 113–115 學年度三個完整垂直切片。難度只使用大考中心選項分析中可直接確認的單選題答對率；多選題與非選擇題不以選項畫記率推估難度。</p>
+      <div class="control-heading">
+        <div>
+          <h2 class="section-title">選擇範圍</h2>
+          <p class="section-note">依照自己的複習進度，組合這次要練的題目。</p>
+        </div>
+        <a class="text-link" href="about.html">分類怎麼看？</a>
+      </div>
 
       <div class="stats" aria-label="題庫統計">
         <div class="stat"><b id="questionTotal">56</b><span>題完整收錄</span></div>
@@ -47,7 +66,9 @@
         <div class="stat"><b id="statsTotal">0</b><span>題有官方答對率</span></div>
       </div>
 
-      <div class="filters">
+      <details class="filter-details">
+        <summary><span>展開進階篩選</span><small>年份、科目、題型、主題、難度與題數</small></summary>
+        <div class="filters">
         <label class="field">
           <span>學年度</span>
           <select id="yearFilter"></select>
@@ -89,7 +110,7 @@
 
         <label class="field">
           <span>題數</span>
-          <input id="questionCount" type="number" min="1" max="57" value="10" inputmode="numeric">
+          <input id="questionCount" type="number" min="1" max="60" value="10" inputmode="numeric">
         </label>
 
         <label class="field">
@@ -104,12 +125,13 @@
           <span>符合條件</span>
           <div class="stat" style="padding:9px 12px"><b id="poolCount" style="font-size:1.1rem">56 題</b><span>可供抽題</span></div>
         </div>
-      </div>
+        </div>
 
-      <div class="actions">
-        <button class="btn btn-primary" id="startBtn">開始練習</button>
-        <button class="btn btn-secondary" id="fullExamBtn">依所選年份做完整試卷</button>
-      </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="startBtn">開始練習</button>
+          <button class="btn btn-secondary" id="fullExamBtn">依所選年份做完整試卷</button>
+        </div>
+      </details>
     </section>
 
     <section class="workspace" id="workspace" aria-hidden="true">
