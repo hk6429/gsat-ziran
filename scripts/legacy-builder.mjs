@@ -169,7 +169,9 @@ export async function buildLegacy(config) {
   const questions = transcripts.map((transcript, index) => {
     const no = index + 1;
     const cat = category(no);
-    const answer = answerKey.answers[String(no)];
+    const officialAnswer = answerKey.answers[String(no)];
+    const fullCredit = officialAnswer === "FULL_CREDIT";
+    const answer = fullCredit ? "" : officialAnswer;
     const question = {
       no,
       id: `學-${year}-${no}`,
@@ -177,12 +179,13 @@ export async function buildLegacy(config) {
       subject: subjects[cat],
       tags: [topics[index], ability(transcript)],
       answer,
-      multi: answer.length > 1,
+      multi: !fullCredit && answer.length > 1,
       written: false,
       pages: [`img/official/${year}/page-${String(pageFor(no)).padStart(2, "0")}.jpg`],
       ...transcript,
       source: `大考中心 ${year} 學年度學測自然考科試題`
     };
+    if (fullCredit) question.fullCredit = true;
     const alternateAnswers = answerKey.alternateAnswers?.[String(no)];
     if (alternateAnswers?.length) question.alternateAnswers = alternateAnswers;
     if (singlePass[no] != null) question.pass = singlePass[no];

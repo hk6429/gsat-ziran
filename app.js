@@ -206,9 +206,21 @@
       result = { id:q.id, no:q.no, written:true, response, correct:null };
     } else {
       const selected = [...card.querySelectorAll(".option input:checked")].map(input => input.value).sort();
-      if (!selected.length) {
+      if (!selected.length && !q.fullCredit) {
         feedback.className = "feedback show bad";
         feedback.textContent = "請先選擇答案。";
+        return;
+      }
+      if (q.fullCredit) {
+        card.querySelectorAll(".option input").forEach(input => { input.disabled = true; });
+        feedback.className = "feedback show ok";
+        feedback.innerHTML = "<strong>本題官方全體給分。</strong> 無論選擇或未作答，均依公告取得本題分數。";
+        result = { id:q.id, no:q.no, written:false, selected, correct:true, fullCredit:true };
+        updateWrongBook(q.id, true);
+        session.results[session.index] = result;
+        submit.disabled = true;
+        next.hidden = false;
+        saveHistory(result);
         return;
       }
       const correct = answerKeys(q.answer).sort();

@@ -27,7 +27,9 @@
       result.innerHTML = `<p class="notice">${year} 年沒有第 ${no} 題。有效題號為 1–${bank.questions.length}。</p>`;
       return;
     }
-    const answer = q.written
+    const answer = q.fullCredit
+      ? "全體到考生均給分"
+      : q.written
       ? q.referenceAnswer
       : [q.answer, ...(q.alternateAnswers || [])]
           .map(value => String(value).split("").join("、"))
@@ -35,7 +37,7 @@
     const options = q.written ? "" : `
       <div class="options">
         ${Object.entries(q.options).map(([key, value]) => `
-          <div class="option ${[q.answer, ...(q.alternateAnswers || [])].some(answer => String(answer).includes(key)) ? "correct" : ""}">
+          <div class="option ${!q.fullCredit && [q.answer, ...(q.alternateAnswers || [])].some(answer => String(answer).includes(key)) ? "correct" : ""}">
             <span class="option-letter">${key}</span><span class="option-text">${escapeHtml(value)}</span>
           </div>`).join("")}
       </div>`;
@@ -46,6 +48,7 @@
             <span class="pill">${escapeHtml(q.subject)}</span>
             ${q.tags.map(tag => `<span class="pill pill-blue">${escapeHtml(tag)}</span>`).join("")}
             ${q.multi ? '<span class="pill pill-gold">多選</span>' : ""}
+            ${q.fullCredit ? '<span class="pill pill-gold">全體給分</span>' : ""}
             ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
             <span class="question-no">${year} 年第 ${q.no} 題</span>
           </div>
