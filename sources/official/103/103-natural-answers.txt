@@ -1,0 +1,25 @@
+           103 學年度學科能力測驗
+               自然考科選擇題答案
+
+題號   答案   題號    答案    題號   答案    題號   答案
+1    A    21     C    41   D     61   BD
+2    C    22     C    42    B    62   D
+3    D    23     B    43   D     63    B
+4    C    24     CD   44    E    64   D
+5    A    25     AD   45   AE    65   ABD
+6    B    26     BE   46    E    66   BCE
+7    D    27     CD   47   BE    67    E
+8    B    28    BCD   48   A     68   BD
+9    A    29    BCE   49   D
+10   B    30     BE   50   BE
+11   C    31     CE   51   BCD
+12   A    32     BD   52    E
+13   D    33    ADE   53   BCD
+14   B    34     CE   54   BE
+15   E    35     BE   55   BC
+16   E    36    ADE   56   ABC
+17   D    37     AE   57   ADE
+18   E    38    ABD   58    B
+19   A    39    BDE   59   A
+20   A    40     AB   60   AC
+
