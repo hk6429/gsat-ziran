@@ -1,0 +1,26 @@
+               105 學年度學科能力測驗
+                自然考科選擇題答案
+
+
+題號   答案   題號      答案    題號   答案    題號   答案
+1    A    21      D     41     D   61   BC
+2    D    22       C    42     B   62   D
+3    E    23       B    43     C   63    E
+4    D    24      D     44   ACE   64    B
+5    C    25       B    45   AB    65    B
+6    B    26      D     46     E   66   BE
+7    E    27       E    47     B   67   BCD
+8    B    28      D     48     D   68    C
+9    D    29      BD    49     B
+10   D    30      ACD   50   ABD
+11   E    31      ABE   51   ADE
+12   B    32      AB    52     E
+13   A    33      BC    53     B
+14   B    34      CD    54   BDE
+15   D    35      AC    55   AC
+16   E    36      AE    56     C
+17   D    37      CE    57     A
+18   A    38       E    58     C
+19   C    39       C    59   DE
+20   B    40       B    60   BDE
+

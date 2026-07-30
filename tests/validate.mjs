@@ -17,7 +17,8 @@ const expected = {
   109: { total:68, choice:68, written:0, stats:42, imageRefs:68 },
   108: { total:68, choice:68, written:0, stats:40, imageRefs:68 },
   107: { total:68, choice:68, written:0, stats:42, imageRefs:68 },
-  106: { total:68, choice:68, written:0, stats:36, imageRefs:68 }
+  106: { total:68, choice:68, written:0, stats:36, imageRefs:68 },
+  105: { total:68, choice:68, written:0, stats:48, imageRefs:68 }
 };
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
@@ -35,8 +36,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 10, "題庫必須正好載入 106–115 十個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106", "題庫年份必須為 106–115");
+check(banks.length === 11, "題庫必須正好載入 105–115 十一個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105", "題庫年份必須為 105–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -86,7 +87,7 @@ for (const bank of banks) {
       check(typeof q.referenceAnswer === "string" && q.referenceAnswer.length > 8, `${bank.year} 第 ${q.no} 題缺官方評分要點`);
     } else {
       check(/^[A-F]+$/.test(q.answer), `${bank.year} 第 ${q.no} 題答案格式不合法：${q.answer}`);
-      check(/^ABCDE(?:F)?$/.test(Object.keys(q.options).join("")), `${bank.year} 第 ${q.no} 題選項必須保持 A–E 或 A–F 順序`);
+      check(/^(?:AB|ABC|ABCD|ABCDE|ABCDEF)$/.test(Object.keys(q.options).join("")), `${bank.year} 第 ${q.no} 題選項必須由 A 起依序排列`);
       check(q.multi === (q.answer.length > 1), `${bank.year} 第 ${q.no} 題 multi 與答案數量不一致`);
       check(q.alternateAnswers == null || (
         Array.isArray(q.alternateAnswers) &&
@@ -128,6 +129,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
