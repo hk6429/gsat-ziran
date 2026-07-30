@@ -8,6 +8,7 @@ await import(pathToFileURL(path.join(root, "data", "bank.js")));
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
+  86: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
   87: { total:68, choice:68, written:0, stats:0, imageRefs:68 },
   88: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
   89: { total:66, choice:66, written:0, stats:0, imageRefs:66 },
@@ -64,8 +65,8 @@ function answersFromOfficialText(year) {
   return answers;
 }
 
-check(banks.length === 29, "題庫必須正好載入 87–115 二十九個學年度");
-check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87", "題庫年份必須為 87–115");
+check(banks.length === 30, "題庫必須正好載入 86–115 三十個學年度");
+check(banks.map(bank => bank.year).join(",") === "115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86", "題庫年份必須為 86–115");
 
 let totalQuestions = 0;
 let totalChoices = 0;
@@ -208,6 +209,10 @@ const n87q62 = banks.find(bank => bank.year === 87)?.questions.find(q => q.no ==
 check(n87q62?.answer === "BFG" && Object.keys(n87q62?.options || {}).join("") === "ABCDEFGH", "87 年第 62 題必須保留 A–H 選項");
 const n87q67 = banks.find(bank => bank.year === 87)?.questions.find(q => q.no === 67);
 check(n87q67?.answer === "AE" && Object.keys(n87q67?.options || {}).join("") === "ABCDEFGH", "87 年第 67 題必須保留 A–H 染色體選項");
+const n86q61 = banks.find(bank => bank.year === 86)?.questions.find(q => q.no === 61);
+check(n86q61?.answer === "CE" && Object.keys(n86q61?.options || {}).join("") === "ABCDEFGH", "86 年第 61 題必須保留 A–H 風向選項");
+const n86q66 = banks.find(bank => bank.year === 86)?.questions.find(q => q.no === 66);
+check(n86q66?.answer === "K" && Object.keys(n86q66?.options || {}).join("") === "ABCDEFGHIJKL", "86 年第 66 題必須保留 A–L 未知物質選項");
 
 for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
@@ -237,6 +242,6 @@ if (errors.length) {
 }
 
 console.log(
-  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87 questions=${totalQuestions} choices=${totalChoices} ` +
+  `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86 questions=${totalQuestions} choices=${totalChoices} ` +
   `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
 );
