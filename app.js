@@ -212,7 +212,9 @@
         return;
       }
       const correct = answerKeys(q.answer).sort();
-      const isCorrect = selected.join("") === correct.join("");
+      const acceptedAnswers = [q.answer, ...(q.alternateAnswers || [])]
+        .map(answer => answerKeys(answer).sort().join(""));
+      const isCorrect = acceptedAnswers.includes(selected.join(""));
       card.querySelectorAll(".option").forEach(option => {
         const key = option.dataset.key;
         if (correct.includes(key)) option.classList.add("correct");
@@ -220,9 +222,11 @@
         option.querySelector("input").disabled = true;
       });
       feedback.className = `feedback show ${isCorrect ? "ok" : "bad"}`;
+      const officialAnswers = [q.answer, ...(q.alternateAnswers || [])]
+        .map(answer => answerKeys(answer).join("、")).join(" 或 ");
       feedback.innerHTML = isCorrect
-        ? `<strong>答對了。</strong> 官方答案：${correct.join("、")}`
-        : `<strong>這題再想一下。</strong> 你的答案：${selected.join("、")}；官方答案：${correct.join("、")}`;
+        ? `<strong>答對了。</strong> 官方答案：${officialAnswers}`
+        : `<strong>這題再想一下。</strong> 你的答案：${selected.join("、")}；官方答案：${officialAnswers}`;
       result = { id:q.id, no:q.no, written:false, selected, correct:isCorrect };
       updateWrongBook(q.id, isCorrect);
     }
