@@ -1,0 +1,26 @@
+               109 學年度學科能力測驗
+                自然考科選擇題答案
+
+
+題號   答案   題號      答案    題號   答案     題號   答案
+1    E    21       E    41     D    61    B
+2    B    22       C    42     AE   62   D
+3    B    23      D     43     C    63    C
+4    B    24      CE    44     D    64   A
+5    B    25      BD    45   ACD    65   AD
+6    E    26      ACE   46     A    66   BE
+7    C    27      CDE   47     E    67   ABE
+8    E    28      BD    48     C    68    B
+9    C    29      BDE   49     C
+10   A    30      ADE   50   ADE
+11   C    31      DE    51     E
+12   C    32      CD    52   ACE
+13   E    33      ADE   53     D
+14   C    34      BD    54   ABC
+15   A    35      ADE   55   BCE
+16   B    36      ABC   56     AB
+17   D    37       C    57     A
+18   D    38       E    58     B
+19   C    39      D     59     AB
+20   D    40      CD    60     CD
+
