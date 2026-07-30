@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://gsat-guowen.vercel.app/sitemap.xml
+Disallow: /check.html
+
+Sitemap: https://gsat-ziran.vercel.app/sitemap.xml

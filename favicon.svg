@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#2e4a8a"/>
-  <text x="32" y="46" font-size="40" font-family="'Noto Serif TC','PMingLiU',serif" font-weight="700" fill="#eef1f7" text-anchor="middle">文</text>
+  <rect width="64" height="64" rx="16" fill="#0b6b5c"/>
+  <path d="M17 43c8-2 12-8 15-22 4 9 9 15 17 19-8 0-13 2-17 7-4-3-9-4-15-4Z" fill="#ffe29b"/>
+  <circle cx="43" cy="18" r="6" fill="#fff"/>
+  <path d="M20 26h10M16 32h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 </svg>

@@ -1,82 +1,52 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
+<!doctype html>
+<html lang="zh-Hant-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>資料來源與著作權說明 — 學測・指考國文題庫</title>
-<meta name="description" content="學測・指考國文題庫的試題資料來源（大學入學考試中心學科能力測驗、指定科目考試歷屆試題）與著作權說明。">
-<link rel="canonical" href="https://gsat-guowen.vercel.app/about.html">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="學測・指考國文題庫">
-<meta property="og:locale" content="zh_TW">
-<meta property="og:title" content="資料來源與著作權說明 — 學測・指考國文題庫">
-<meta property="og:description" content="試題資料來源（大學入學考試中心歷屆試題）與著作權說明。">
-<meta property="og:url" content="https://gsat-guowen.vercel.app/about.html">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<style>
-  :root{ --ink:#22283a; --paper:#eef1f7; --card:#f8faff; --accent:#2e4a8a; --line:#cdd6ea; --muted:#5f6b85; --seal:#33478f; }
-  *{box-sizing:border-box}
-  body{font-family:"Songti TC","Noto Serif TC",serif; background:var(--paper); color:var(--ink); line-height:1.8; margin:0}
-  .wrap{max-width:760px; margin:0 auto; padding:24px 16px 60px}
-  a{color:var(--accent)}
-  h1{font-size:1.4rem; color:var(--accent); border-left:4px solid var(--seal); padding-left:10px; margin-bottom:18px}
-  h2{font-size:1.05rem; color:var(--accent); margin:24px 0 8px}
-  .panel{background:var(--card); border:1px solid var(--line); border-radius:4px 16px 4px 16px; padding:16px 18px; margin-bottom:14px}
-  .back{display:inline-block; margin-bottom:16px; font-size:.9rem}
-  p{margin-bottom:10px}
-  .muted{color:var(--muted); font-size:.85rem}
-
-a{color:var(--seal,#33478f); text-decoration:underline; text-decoration-color:rgba(51,71,143,.4); text-underline-offset:3px}
-a:hover{text-decoration-color:rgba(51,71,143,.9)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>資料來源與分類｜學測自然題庫</title>
+  <meta name="description" content="學測自然題庫的官方來源、分類方法、統計使用原則與資料限制。">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="wrap">
-  <a class="back" href="index.html">← 回題庫首頁</a>
-  <h1>資料來源與著作權說明</h1>
+  <main class="card info-page">
+    <a href="index.html">← 回題庫首頁</a>
+    <h1>資料來源與分類方法</h1>
+    <p>這個網站先完成 115 學年度自然考科的完整垂直切片，再逐年往回補。題目、圖表、選項順序、選擇題答案與非選擇題評分要點，均以大考中心公布資料為準。</p>
 
-  <div class="panel">
-    <h2>題目來源</h2>
-    <p>本站題目取材自「大學入學考試中心」（財團法人大學入學考試中心基金會）歷屆國文科試題：學科能力測驗（學測）103～114年，共 12 個年度；指定科目考試（指考）91～110年，共 20 個年度。合計 950 題選擇題（含 243 題多選題）。</p>
-    <p>依《著作權法》第9條第1項第5款規定，「依法令舉行之各類考試試題及其備用試題」不得為著作權之標的，學測與指考屬依大學入學相關法令舉行之考試，故歷屆試題（題目、選項）本身可自由重製、公開傳輸。</p>
-    <p class="muted">補充說明：這個豁免僅及於「試題整體」——也就是題目、選項跟其所附閱讀材料綁在一起呈現的樣子（本站的呈現方式即是如此）。若題目引用了特定作家的文章段落作為閱讀素材，該段原文若被單獨抽出、脫離題目另作他用，仍受原作者著作權保護，不因曾出現在試題中而一併喪失保護。</p>
-  </div>
+    <h2>115 學年度收錄範圍</h2>
+    <table>
+      <thead><tr><th>內容</th><th>數量</th><th>處理方式</th></tr></thead>
+      <tbody>
+        <tr><td>全卷</td><td>56 題</td><td>依原卷題號完整收錄</td></tr>
+        <tr><td>選擇題</td><td>48 題</td><td>逐題比對官方參考答案</td></tr>
+        <tr><td>非選擇題</td><td>8 題</td><td>呈現滿分參考答案與評分要點，不自動判分</td></tr>
+        <tr><td>官方答對率</td><td>30 題</td><td>只採選項分析表可直接確認的單選題全體答對率</td></tr>
+      </tbody>
+    </table>
 
-  <div class="panel">
-    <h2>本站做了哪些加工</h2>
-    <p>在官方公開試題的基礎上，本站另外整理、製作了以下內容：</p>
-    <p>1. 依自訂分類系統（9大類39小類，錨定108課綱閱讀歷程與大考中心公開評量目標，非抄襲他人分類表）為每題標註大類／小類標籤。</p>
-    <p>2. 標註每題是文言文或白話文，並整理官方公布的答對率（難度參考）、鑑別度與各選項畫記百分率。</p>
-    <p>3. 為每題撰寫一則白話文解析，說明解題邏輯。</p>
-  </div>
+    <h2>分類軸</h2>
+    <p>主分類採 108 課綱自然領域的四個學科，加上跨科整合；小標籤再由 115 真題實際出現的概念與能力向下歸納，不照搬補教或他站分類表。</p>
+    <ul>
+      <li><strong>地球科學：</strong>天文與宇宙、大氣與天氣、地震與海嘯、氣候變遷、海洋與潮汐、地質年代、行星科學。</li>
+      <li><strong>物理：</strong>運動學、牛頓力學、能量與作功、波動與光、熱學、核能、量子現象、電磁感應。</li>
+      <li><strong>化學：</strong>酸鹼反應、熱化學、原子結構與週期性、化學鍵與結構、分離技術、有機化學、奈米材料。</li>
+      <li><strong>生物：</strong>細胞代謝、遺傳、分子生物學、演化與分類、基因表現、生態與交互作用。</li>
+      <li><strong>跨科整合：</strong>題目主要解題歷程同時跨越兩個以上學科時使用。</li>
+    </ul>
+    <p>第二個年度加入後會重新檢查分布；若某類過度集中或只有孤例，才調整控制詞表。</p>
 
-  <div class="panel">
-    <h2>解析（explain）的製作方式</h2>
-    <p>每題解析先由 AI 依題幹、選項與官方公布答案生成初稿，再另外透過網路搜尋交叉查證史實／字義／文化常識等內容是否正確，並對附圖題實際比對圖片內容逐一確認，才定稿上線。</p>
-    <p class="muted">若解析牽涉到題庫原始資料本身有缺口（例如少數題目沒有保留原考卷的畫線／底線標記），會在解析中誠實註明此限制，不會臆測捏造答案依據。</p>
-  </div>
+    <h2>官方來源</h2>
+    <ul>
+      <li><a href="https://www.ceec.edu.tw/xmfile?xsmsid=0j052424829869345634">大考中心：學測歷年一般試題</a></li>
+      <li><a href="https://www.ceec.edu.tw/files/file_pool/1/0q054346117821958325/06-115%E5%AD%B8%E6%B8%AC%E8%87%AA%E7%84%B6%E8%A9%A6%E5%8D%B7.pdf">115 學測自然考科試題</a></li>
+      <li><a href="https://www.ceec.edu.tw/files/file_pool/1/0Q018623645487580977/06-115%E5%AD%B8%E6%B8%AC%E8%87%AA%E7%84%B6%E5%8F%83%E8%80%83%E7%AD%94%E6%A1%88.pdf">115 學測自然選擇題參考答案</a></li>
+      <li><a href="https://www.ceec.edu.tw/files/file_pool/1/0q054336274158996445/115%E5%AD%B8%E6%B8%AC%E8%87%AA%E7%84%B6%E8%80%83%E7%A7%91%E9%9D%9E%E9%81%B8%E6%93%87%E9%A1%8C%E5%8F%83%E8%80%83%E7%AD%94%E6%A1%88%E8%88%87%E8%A9%95%E5%88%86%E5%8E%9F%E5%89%87.pdf">115 學測自然非選擇題評分原則</a></li>
+      <li><a href="https://www.ceec.edu.tw/files/file_pool/1/0Q064393450164866355/06-%E8%87%AA%E7%84%B6%E9%81%B8%E9%A0%85%E5%88%86%E6%9E%90.pdf">115 學測自然選擇題選項分析</a></li>
+    </ul>
 
-  <div class="panel">
-    <h2>使用本站前該知道的三件事</h2>
-    <p><b>1. 分類系統是本站自訂，不是大考中心官方架構。</b>C1～C9、39小類是本站參照108課綱閱讀歷程與大考中心公開評量目標自行歸納，方便練習與弱點分析使用，並非大學入學考試中心公布的正式分類，引用時請勿誤植為官方系統。</p>
-    <p><b>2. 答對率、鑑別度與選項分析逐題出自大考中心官方統計。</b>本站 950 題皆附官方答對率與鑑別度，難度及鑑別度篩選即依此運作；作答後可切換查看全體考生與低分組的各選項畫記百分率。單選題各選項連同未答約為 100%；多選題各選項為獨立畫記率，不應相加。官方統計若因四捨五入產生些微總和差異，本站保留原值，不自行推估修補。答案亦逐題比對大考中心公布之參考答案，多選題採集合相等判分。原始統計可由大考中心的<a href="https://www.ceec.edu.tw/xmdoc?xsmsid=0J018604485538810196">學測歷屆資料</a>與<a href="https://www.ceec.edu.tw/xmdoc?xsmsid=0J018611000723433352">指考歷屆資料</a>查閱。</p>
-    <p><b>3. 學測與指考是兩種不同性質的測驗，難度分布不同。</b>學科能力測驗（學測）為高中生學習成就的門檻性評量、範圍為部定必修；指定科目考試（指考）於 91～110 年舉行、為進階選才、範圍與難度較高；111 學年度起指考由分科測驗取代，但<b>分科測驗不設國文科</b>，國文自此僅在學測施測、分科入學直接採計學測國文成績，故本站指考題止於 110 年。對現在的考生而言，指考題是難度較高的進階練習素材，並非仍在舉行的考試。本站雖將兩者整合於同一系統方便練習，兩者答對率反映的是不同考生母體，比較時宜留意此差異。</p>
-  </div>
-
-  <div class="panel">
-    <h2>主站打不開怎麼辦</h2>
-    <p>本站主要網址 <a href="https://gsat-guowen.vercel.app/">gsat-guowen.vercel.app</a> 若因流量異常暫時無法連線，可改用備用站，題目與功能完全同步：<a href="https://gsat-guowen.pages.dev/">gsat-guowen.pages.dev</a>、<a href="https://gsat-guowen.netlify.app/">gsat-guowen.netlify.app</a>。</p>
-  </div>
-
-  <div class="panel">
-    <h2>發現錯誤怎麼辦</h2>
-    <p>若發現題目、答案或解析有誤，歡迎來信反映，我們會盡快查證修正：<a href="mailto:hk6429@gmail.com">hk6429@gmail.com</a>。</p>
-  </div>
-
-  <p class="muted">另見：<a href="privacy.html">隱私權政策</a></p>
-</div>
-<img src="https://visitor-badge.laobi.icu/badge?page_id=hk6429.gsat-guowen" alt="訪客人數" loading="lazy" style="position:fixed;right:14px;bottom:14px;z-index:2147483000;border-radius:999px;box-shadow:0 2px 10px rgba(0,0,0,.35);">
-<script>window.goatcounter = {path: p => location.host + p}</script>
-<script data-goatcounter="https://hk6429.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <h2>統計限制</h2>
+    <p>多選題的官方表格列的是各選項畫記百分率，不等於整題拿滿分的比例，因此本站不把它轉成「答對率」。非選擇題同樣不由本站推估難度。無難度標籤只代表沒有可直接採用的官方逐題答對率，不代表題目比較難。</p>
+  </main>
 </body>
 </html>

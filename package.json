@@ -1,9 +1,10 @@
 {
-  "name": "cap-guowen",
+  "name": "gsat-ziran",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "@upstash/redis": "^1.38.0"
+  "scripts": {
+    "build:data": "node scripts/build-n115.mjs && ./build-bank.sh",
+    "test": "node tests/validate.mjs"
   }
 }

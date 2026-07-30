@@ -1,5 +1,3 @@
-// 自動合併：由 build-bank.sh 從 data/n*.js 產生，勿直接編輯。
-window.BANK = window.BANK || [];
 window.BANK = window.BANK || [];
 window.BANK.push({
   "year": 115,
@@ -1415,4 +1413,3 @@ window.BANK.push({
     }
   ]
 });
-

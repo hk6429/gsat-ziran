@@ -1,43 +1,66 @@
-# 學測・指考國文題庫
+# 學測自然題庫
 
-免費、免註冊的歷屆國文選擇題分類練習網站，收錄：
+免費、免註冊的大學學測自然科考古題分類練習網站。第一個完整垂直切片收錄 115 學年度自然考科：
 
-- 學科能力測驗（學測）103～114 年
-- 指定科目考試（指考）91～110 年
-- 共 950 題，其中單選題 707 題、多選題 243 題
-
-## 主要功能
-
-- 依考別、年份、分類、文體、難度與鑑別度篩選
-- 顯示大考中心官方答對率／得分率與鑑別度
-- 作答後查看全體考生及低分組的各選項畫記百分率
-- 錯題本、間隔複習、學習歷程與弱點分析
-- 整回模考、教師選題與列印
-- 題目問題回報
+- 全卷 56 題
+- 選擇題 48 題，逐題比對大考中心官方參考答案
+- 非選擇題 8 題，提供大考中心滿分參考答案與評分要點
+- 物理、化學、生物、地球科學、跨科整合五個主分類
+- 30 題單選題官方答對率、難度篩選、查題校對、本機作答紀錄
 
 ## 官方資料來源
 
-- [大考中心學測歷屆資料](https://www.ceec.edu.tw/xmdoc?xsmsid=0J018604485538810196)
-- [大考中心指考歷屆資料](https://www.ceec.edu.tw/xmdoc?xsmsid=0J018611000723433352)
+- [大考中心學測歷年一般試題](https://www.ceec.edu.tw/xmfile?xsmsid=0j052424829869345634)
+- 115 學測自然試題、選擇題參考答案、非選擇題評分原則、選項分析表
 
-題目、答案、答對率、鑑別度與選項分析均依官方公開資料整理；缺少正式統計時不自行推估。
+原始 PDF 與文字抽取檔保存在 `sources/official/115/`。題面圖片由官方原卷轉製，放在 `img/official/115/`。
+
+## 專案結構
+
+```text
+data/n115.js                  115 年結構化題庫
+scripts/build-n115.mjs        重建 115 年題庫資料
+sources/official/115/         官方 PDF、答案與來源紀錄
+img/official/115/             官方原卷頁面影像
+index.html / app.js           練習介面
+check.html / check.js         查題校對介面
+```
 
 ## 本機執行
 
-這是以原生 HTML、CSS 與 JavaScript 製作的靜態網站。使用任一靜態檔案伺服器開啟專案根目錄即可。
-
-題庫合併檔可由下列指令重新產生：
+這是原生 HTML、CSS 與 JavaScript 靜態網站。可使用任一靜態檔案伺服器：
 
 ```sh
+npx serve .
+```
+
+## 重建資料
+
+`scripts/build-n115.mjs` 會以公開題庫頁輔助轉錄文字；正式題面、答案與統計仍以專案中的大考中心官方 PDF 為準。
+
+```sh
+node scripts/build-n115.mjs
 ./build-bank.sh
 ```
 
-## 正式網站
+## 驗證
 
-- Vercel：https://gsat-guowen.vercel.app/
-- Cloudflare Pages：https://gsat-guowen.pages.dev/
-- Netlify：https://gsat-guowen.netlify.app/
+```sh
+npm test
+```
 
-## 隱私
+驗證包含題數、題號、答案格式、官方頁面影像、非選擇題參考答案、分類控制詞與 HTML 關鍵資產。
 
-錯題本與學習歷程保存在使用者自己的瀏覽器，不需註冊。詳細說明請參閱網站內的隱私權政策。
+## 部署
+
+目標平台：
+
+- Vercel：`gsat-ziran.vercel.app`
+- Cloudflare Pages：`gsat-ziran.pages.dev`
+- Netlify：`gsat-ziran.netlify.app`
+
+部署前必須先執行 `npm test`，並在三個正式網址做 cache-busting 煙霧驗收。
+
+## 授權與聲明
+
+網站程式碼可依 GitHub repository 的授權條款使用。考試題目、答案與統計資料的權利歸原發布單位所有；本站為非營利學習整理，並非大考中心官方網站。
