@@ -1,0 +1,28 @@
+           102 學年度學科能力測驗
+
+            自然考科選擇題答案
+
+
+題號   答案    題號   答案    題號   答案    題號   答案
+
+1    D或B   21    E    41    B    61   ABD
+2     C    22    C    42   A     62   AE
+3     B    23   D     43    C    63   AE
+4     B    24   A     44    C    64   AC
+5     C    25    B    45    B    65   AE
+6     A    26   D     46   ADE   66   DE
+7     C    27   CE    47    E    67   CE
+8     D    28   AE    48   D     68   D
+9     D    29   CEF   49   AC
+10    A    30   CDE   50    E
+11    A    31   ABE   51    C
+12    C    32   AC    52    E
+13    E    33   CDE   53   D
+14    D    34   CD    54    C
+15    D    35   AC    55   D
+16    A    36   BD    56   AD
+17    E    37   ACD   57   A
+18    A    38   BDE   58   DE
+19    E    39   BDE   59   BC
+20    D    40   D     60   CE
+

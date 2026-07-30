@@ -65,7 +65,13 @@ function cleanPdfText(value) {
 }
 
 function parseOfficialTranscript(raw, year) {
-  const markers = [...raw.matchAll(/(?:^|\n)\s*(\d{1,2})\.\s*/gm)];
+  const firstSection = raw.search(/第\s*壹\s*部\s*分/);
+  const source = firstSection >= 0 ? raw.slice(firstSection) : raw;
+  const allMarkers = [...source.matchAll(/(?:^|\n)\s*(\d{1,2})\.\s*/gm)];
+  const firstQuestion = allMarkers.findIndex((marker, index) => (
+    Number(marker[1]) === 1 && Number(allMarkers[index + 1]?.[1]) === 2
+  ));
+  const markers = firstQuestion >= 0 ? allMarkers.slice(firstQuestion) : allMarkers;
   const selected = [];
   let markerPosition = 0;
   for (let no = 1; no <= 68; no += 1) {
@@ -78,7 +84,7 @@ function parseOfficialTranscript(raw, year) {
   const passages = {};
   return selected.map((marker, index) => {
     const no = index + 1;
-    let block = raw.slice(marker.index + marker[0].length, selected[index + 1]?.index ?? raw.length);
+    let block = source.slice(marker.index + marker[0].length, selected[index + 1]?.index ?? source.length);
     const group = block.match(/(\d{1,2}\s*[-~～]\s*\d{1,2}\s*為\s*題\s*組[\s\S]*)$/);
     if (group) {
       passages[no + 1] = cleanPdfText(group[1]);
@@ -158,6 +164,8 @@ export async function buildLegacy(config) {
       ...transcript,
       source: `大考中心 ${year} 學年度學測自然考科試題`
     };
+    const alternateAnswers = answerKey.alternateAnswers?.[String(no)];
+    if (alternateAnswers?.length) question.alternateAnswers = alternateAnswers;
     if (singlePass[no] != null) question.pass = singlePass[no];
     return question;
   });
