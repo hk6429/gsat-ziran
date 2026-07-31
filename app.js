@@ -68,13 +68,42 @@
     return [...document.querySelectorAll(".subject-filter:checked")].map(input => input.value);
   }
 
-  function selectedYear() {
-    return $("yearFilter").value;
+  function selectedYears() {
+    if ($("mainYearAll").checked) return null;
+    return new Set(
+      [...document.querySelectorAll(".main-year-checkbox:checked")].map(input => Number(input.value))
+    );
   }
 
   function questionsForSelectedYear() {
-    const year = selectedYear();
-    return year === "all" ? allQuestions : allQuestions.filter(q => q.year === Number(year));
+    const years = selectedYears();
+    return years ? allQuestions.filter(q => years.has(q.year)) : allQuestions;
+  }
+
+  function updateMainYearSummary() {
+    const years = [...document.querySelectorAll(".main-year-checkbox:checked")]
+      .map(input => Number(input.value))
+      .sort((a, b) => b - a);
+    $("mainYearSummary").textContent =
+      $("mainYearAll").checked || !years.length
+        ? "全部年度"
+        : years.length <= 4
+          ? `${years.join("、")} 學年度`
+          : `${years.slice(0, 3).join("、")} 等 ${years.length} 個年度`;
+  }
+
+  function handleMainYearChange(event) {
+    const all = $("mainYearAll");
+    const years = [...document.querySelectorAll(".main-year-checkbox")];
+    if (event.target === all && all.checked) {
+      years.forEach(input => { input.checked = false; });
+    } else if (event.target.classList.contains("main-year-checkbox") && event.target.checked) {
+      all.checked = false;
+    }
+    if (!all.checked && !years.some(input => input.checked)) all.checked = true;
+    updateMainYearSummary();
+    updateStats();
+    updatePoolCount();
   }
 
   function inDifficulty(q, value) {
@@ -105,9 +134,11 @@
     $("poolCount").textContent = `${total} 題`;
     $("startBtn").disabled = total === 0;
     $("questionCount").max = Math.max(total, 1);
-    const year = selectedYear();
-    const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
-    $("fullExamBtn").textContent = `依 ${fullBank.year} 年原卷做完整 ${fullBank.questions.length} 題`;
+    const years = selectedYears();
+    const fullBank = years?.size === 1 ? banks.find(bank => years.has(bank.year)) : null;
+    $("fullExamBtn").textContent = fullBank
+      ? `依 ${fullBank.year} 年原卷做完整 ${fullBank.questions.length} 題`
+      : "整回模考（請只選 1 個年份）";
     updateFilterSummary(total);
   }
 
@@ -126,7 +157,7 @@
   }
 
   function updateFilterSummary(total = filteredPool().length) {
-    const yearText = selectedYear() === "all" ? "全部年份" : `${selectedYear()} 學年度`;
+    const yearText = $("mainYearSummary").textContent;
     const subjects = selectedSubjects();
     const subjectText = subjects.length === subjectOrder.length
       ? "全科"
@@ -139,18 +170,19 @@
   }
 
   function initFilters() {
-    $("yearFilter").innerHTML =
-      banks.map(bank => `<option value="${bank.year}">${bank.year} 學年度</option>`).join("") +
-      '<option value="all">全部年份</option>';
+    $("mainYearOptions").innerHTML = `
+      <label class="paper-year-all"><input id="mainYearAll" type="checkbox" value="all" checked> 全部年度</label>
+      ${banks.map(bank => `<label><input class="main-year-checkbox" type="checkbox" value="${bank.year}"> ${bank.year} 學年度</label>`).join("")}`;
+    updateMainYearSummary();
 
     const tags = [...new Set(allQuestions.flatMap(q => q.tags))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
     $("tagFilter").innerHTML = '<option value="all">全部主題</option>' +
       tags.map(tag => `<option value="${tag}">${tag}</option>`).join("");
 
-    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("yearFilter"), $("orderFilter")]
+    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("orderFilter")]
       .forEach(input => input.addEventListener("change", updatePoolCount));
+    $("mainYearOptions").addEventListener("change", handleMainYearChange);
     $("questionCount").addEventListener("input", () => updateFilterSummary());
-    $("yearFilter").addEventListener("change", updateStats);
     filterDetails.addEventListener("toggle", () => {
       $("filterToggleLabel").textContent = filterDetails.open ? "收合進階篩選" : "展開進階篩選";
     });
@@ -429,8 +461,16 @@
   function startSession(mode = "filtered") {
     let pool = filteredPool();
     if (mode === "full") {
-      const year = selectedYear();
-      const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
+      const years = selectedYears();
+      if (!years || years.size !== 1) {
+        filterDetails.open = true;
+        $("mainYearFilter").open = true;
+        $("mainYearSummary").focus();
+        alert("整回模考一次只能使用一份原卷，請只勾選一個特定年份。");
+        return;
+      }
+      const fullBank = banks.find(bank => years.has(bank.year));
+      if (!fullBank) return;
       pool = fullBank.questions.map(q => enrichQuestion(q, fullBank.year));
       $("questionCount").value = pool.length;
     }

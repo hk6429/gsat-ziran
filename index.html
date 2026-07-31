@@ -66,10 +66,13 @@
       <details class="filter-details" id="filterDetails">
         <summary><span id="filterToggleLabel">展開進階篩選</span><small>年份、科目、題型、主題、難度與題數</small></summary>
         <div class="filters">
-        <label class="field">
-          <span>學年度</span>
-          <select id="yearFilter"></select>
-        </label>
+        <fieldset class="paper-year-filter main-year-filter field">
+          <legend>學年度（可複選）</legend>
+          <details class="paper-year-multi" id="mainYearFilter">
+            <summary id="mainYearSummary">全部年度</summary>
+            <div class="paper-year-options" id="mainYearOptions"></div>
+          </details>
+        </fieldset>
 
         <fieldset class="subject-grid field">
           <legend>科目</legend>

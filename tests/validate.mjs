@@ -366,7 +366,7 @@ for (const file of ["index.html", "check.html", "about.html", "privacy.html", "a
 const indexHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const checkHtml = fs.readFileSync(path.join(root, "check.html"), "utf8");
 const checkJs = fs.readFileSync(path.join(root, "check.js"), "utf8");
-check(/id="yearFilter"/.test(indexHtml), "首頁缺少年份篩選器");
+check(/id="mainYearOptions"/.test(indexHtml) && /id="mainYearSummary"/.test(indexHtml), "首頁缺少年度複選器");
 check(/data\/bank\.js/.test(indexHtml) && /data\/bank\.js/.test(checkHtml), "首頁與查題頁必須載入多年份 bank.js");
 check(/\\d\{2,3\}/.test(checkJs), "查題頁必須支援二至三位數學年度");
 check(/lookupCoverage/.test(checkHtml) && /Math\.min\(\.\.\.years\)/.test(checkJs), "查題頁收錄範圍必須由題庫年份動態產生");
