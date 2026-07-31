@@ -155,6 +155,16 @@
         <button class="btn btn-link" id="closePaperBtn">關閉</button>
       </div>
       <p id="paperPoolSummary" class="filter-summary"></p>
+      <div class="paper-quick-row">
+        <fieldset class="paper-year-filter">
+          <legend>快速勾選年度（可複選）</legend>
+          <details class="paper-year-multi" id="paperYearQuick">
+            <summary id="paperYearQuickSummary">全部年度</summary>
+            <div class="paper-year-options" id="paperYearQuickOptions"></div>
+          </details>
+        </fieldset>
+        <button class="btn btn-secondary" id="paperYearApplyBtn">套用（只勾符合的）</button>
+      </div>
       <div class="paper-toolbar">
         <button class="btn btn-secondary" id="paperSelectAllBtn">全選</button>
         <button class="btn btn-secondary" id="paperSelectNoneBtn">全不選</button>

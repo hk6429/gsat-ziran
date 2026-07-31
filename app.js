@@ -521,11 +521,52 @@
     $("paperSelectedCount").textContent = `已選 ${selectedPaperQuestions().length} 題`;
   }
 
+  function selectedPaperYears() {
+    if ($("paperYearAll")?.checked) return null;
+    return new Set(
+      [...document.querySelectorAll(".paper-year-checkbox:checked")].map(input =>
+        Number(input.value),
+      ),
+    );
+  }
+
+  function updatePaperYearSummary() {
+    const years = [...document.querySelectorAll(".paper-year-checkbox:checked")]
+      .map(input => Number(input.value))
+      .sort((a, b) => b - a);
+    $("paperYearQuickSummary").textContent =
+      $("paperYearAll")?.checked || !years.length
+        ? "全部年度"
+        : years.length <= 4
+          ? `${years.join("、")} 學年度`
+          : `${years.slice(0, 3).join("、")} 等 ${years.length} 個年度`;
+  }
+
+  function handlePaperYearChange(event) {
+    const all = $("paperYearAll");
+    const years = [...document.querySelectorAll(".paper-year-checkbox")];
+    if (event.target === all && all.checked) {
+      years.forEach(input => { input.checked = false; });
+    } else if (
+      event.target.classList.contains("paper-year-checkbox") &&
+      event.target.checked
+    ) {
+      all.checked = false;
+    }
+    if (!all.checked && !years.some(input => input.checked)) all.checked = true;
+    updatePaperYearSummary();
+  }
+
   function renderPaperList() {
     const pool = filteredPool();
+    const years = [...new Set(pool.map(q => q.year))].sort((a, b) => b - a);
     $("paperPoolSummary").textContent = `目前篩選符合 ${pool.length} 題；請勾選要放入考卷的題目。`;
+    $("paperYearQuickOptions").innerHTML = `
+      <label class="paper-year-all"><input id="paperYearAll" type="checkbox" value="all" checked> 全部年度</label>
+      ${years.map(year => `<label><input class="paper-year-checkbox" type="checkbox" value="${year}"> ${year} 學年度</label>`).join("")}`;
+    updatePaperYearSummary();
     $("paperList").innerHTML = pool.map(q => `
-      <label><input class="paper-question" type="checkbox" value="${escapeHtml(q.id)}">
+      <label><input class="paper-question" type="checkbox" value="${escapeHtml(q.id)}" data-year="${q.year}">
       <span>${q.year} 年第 ${q.no} 題・${escapeHtml(q.subject)}・${escapeHtml(q.tags.join("／"))}</span></label>`
     ).join("");
     $("paperList").querySelectorAll("input").forEach(input => input.addEventListener("change", updatePaperCount));
@@ -589,6 +630,14 @@
   });
   $("paperSelectNoneBtn").addEventListener("click", () => {
     document.querySelectorAll(".paper-question").forEach(input => { input.checked = false; });
+    updatePaperCount();
+  });
+  $("paperYearQuickOptions").addEventListener("change", handlePaperYearChange);
+  $("paperYearApplyBtn").addEventListener("click", () => {
+    const years = selectedPaperYears();
+    document.querySelectorAll(".paper-question").forEach(input => {
+      input.checked = !years || years.has(Number(input.dataset.year));
+    });
     updatePaperCount();
   });
   $("printPaperBtn").addEventListener("click", printPaper);
