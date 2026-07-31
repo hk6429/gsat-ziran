@@ -399,6 +399,9 @@ check(/id="reviewBtn"/.test(indexHtml) && /id="wrongBookBtn"/.test(indexHtml) &&
 check(/id="paperModeBtn"/.test(indexHtml) && /id="paperPanel"/.test(indexHtml), "首頁必須提供教師出卷模式");
 check(/id="paperYearQuickOptions"/.test(indexHtml) && /id="paperYearApplyBtn"/.test(indexHtml), "教師出卷必須提供年度複選");
 check(/function selectedPaperYears\(\)/.test(appJs) && /years\.has\(Number\(input\.dataset\.year\)\)/.test(appJs), "教師出卷年度複選邏輯不完整");
+check(/id="quickStartBtn"/.test(indexHtml) && /function startQuickSession\(\)/.test(appJs), "首頁缺少國文站同型的快速開始入口");
+check(/id="paperDifficultyQuick"/.test(indexHtml) && /id="paperLinkBtn"/.test(indexHtml) && /id="paperPageSize"/.test(indexHtml), "教師出卷缺少難度、測驗連結或紙張尺寸控制");
+check(/教師答案與解析/.test(appJs) && /URLSearchParams/.test(appJs), "教師卷解析或線上測驗連結流程不完整");
 check(/data\/learning\.js/.test(indexHtml) && /data\/learning\.js/.test(checkHtml), "首頁與查題頁都必須載入教師解析與官方選項統計");
 
 const publicText = ["index.html", "check.html", "about.html", "privacy.html", "README.md", "manifest.json", "robots.txt", "sitemap.xml"]

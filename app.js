@@ -61,7 +61,9 @@
 
   function refreshLearningCounts() {
     $("wrongCount").textContent = storage.get("gsatZiranWrong", []).length;
-    $("reviewCount").textContent = dueReviewQuestions().length;
+    const due = dueReviewQuestions().length;
+    $("reviewCount").textContent = due;
+    $("reviewBtn").hidden = due === 0;
   }
 
   function selectedSubjects() {
@@ -488,6 +490,21 @@
     renderCurrent();
   }
 
+  function startQuickSession() {
+    $("mainYearAll").checked = true;
+    document.querySelectorAll(".main-year-checkbox").forEach(input => { input.checked = false; });
+    document.querySelectorAll(".subject-filter").forEach(input => { input.checked = true; });
+    $("typeFilter").value = "all";
+    $("tagFilter").value = "all";
+    $("difficultyFilter").value = "all";
+    $("questionCount").value = "10";
+    $("orderFilter").value = "random";
+    updateMainYearSummary();
+    updateStats();
+    updatePoolCount();
+    startSession("filtered");
+  }
+
   function startTimer() {
     clearInterval(session.timerId);
     session.timerId = setInterval(() => {
@@ -521,6 +538,7 @@
   }
 
   $("startBtn").addEventListener("click", () => startSession("filtered"));
+  $("quickStartBtn").addEventListener("click", startQuickSession);
   $("fullExamBtn").addEventListener("click", () => startSession("full"));
   $("restartBtn").addEventListener("click", () => {
     $("summary").classList.remove("show");
@@ -614,15 +632,21 @@
     updatePaperCount();
   }
 
-  function paperDocument(questions, teacherCopy = false) {
-    const body = questions.map((q, index) => {
+  function paperQuestionsHtml(questions, teacherCopy = false) {
+    return questions.map((q, index) => {
       const options = q.written ? "" : Object.entries(q.options).map(([key, value]) => `<div>（${key}）${escapeHtml(value)}</div>`).join("");
       const answer = teacherCopy
-        ? `<div class="paper-answer"><b>答案：</b>${escapeHtml(q.answer || q.referenceAnswer || "官方全體給分")}${q.explanation ? `<br><b>解析：</b>${escapeHtml(q.explanation.keyIdea)}` : ""}</div>`
+        ? `<div class="paper-answer"><b>答案：</b>${escapeHtml(q.answer || q.referenceAnswer || "官方全體給分")}${q.explanation ? `<br><b>解析：</b>${escapeHtml(q.explanation.keyIdea)}${q.explanation.steps?.length ? `<ol>${q.explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>` : ""}` : ""}</div>`
         : "";
       return `<section><h3>${index + 1}.（${q.year} 年第 ${q.no} 題）</h3><p>${escapeHtml(q.stem)}</p>${options}${answer}</section>`;
     }).join("");
-    return `<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>學測自然科自編考卷</title><style>body{font-family:serif;line-height:1.8;max-width:800px;margin:auto}section{break-inside:avoid;margin:0 0 28px}.paper-answer{margin-top:10px;padding:8px;border-left:3px solid #26734d}</style><body><h1>學測自然科自編考卷</h1>${body}</body></html>`;
+  }
+
+  function paperDocument(questions) {
+    const pageSize = $("paperPageSize").value;
+    const studentBody = paperQuestionsHtml(questions);
+    const teacherBody = paperQuestionsHtml(questions, true);
+    return `<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>學測自然科自編考卷</title><style>@page{size:${pageSize};margin:16mm}body{font-family:serif;line-height:1.8;max-width:1000px;margin:auto}section{break-inside:avoid;margin:0 0 28px}.teacher-copy{break-before:page}.paper-answer{margin-top:10px;padding:8px;border-left:3px solid #26734d;background:#f3f7f5}</style><body><h1>學測自然科自編考卷</h1>${studentBody}<div class="teacher-copy"><h1>教師答案與解析</h1>${teacherBody}</div></body></html>`;
   }
 
   function printPaper() {
@@ -638,7 +662,7 @@
   function downloadWord() {
     const questions = selectedPaperQuestions();
     if (!questions.length) return;
-    const blob = new Blob(["\ufeff", paperDocument(questions, true)], { type:"application/msword" });
+    const blob = new Blob(["\ufeff", paperDocument(questions)], { type:"application/msword" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "學測自然科自編考卷_教師卷.doc";
@@ -657,7 +681,7 @@
     const open = $("moreActions").hidden;
     $("moreActions").hidden = !open;
     $("moreBtn").setAttribute("aria-expanded", String(open));
-    $("moreBtn").textContent = open ? "更多功能⌄" : "更多功能⌃";
+    $("moreBtn").textContent = open ? "更多功能 ▴" : "更多功能 ▾";
   });
   $("paperModeBtn").addEventListener("click", () => {
     renderPaperList();
@@ -676,14 +700,38 @@
   $("paperYearQuickOptions").addEventListener("change", handlePaperYearChange);
   $("paperYearApplyBtn").addEventListener("click", () => {
     const years = selectedPaperYears();
+    const difficulty = $("paperDifficultyQuick").value;
     document.querySelectorAll(".paper-question").forEach(input => {
-      input.checked = !years || years.has(Number(input.dataset.year));
+      const question = allQuestions.find(q => q.id === input.value);
+      input.checked =
+        (!years || years.has(Number(input.dataset.year))) &&
+        Boolean(question) &&
+        inDifficulty(question, difficulty);
     });
     updatePaperCount();
+  });
+  $("paperLinkBtn").addEventListener("click", async () => {
+    const questions = selectedPaperQuestions();
+    if (!questions.length) {
+      $("paperLinkOutput").textContent = "請先勾選至少一題。";
+      return;
+    }
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("set", questions.map(q => q.id).join(","));
+    $("paperLinkOutput").textContent = url.toString();
+    try { await navigator.clipboard.writeText(url.toString()); }
+    catch { /* 瀏覽器未開放剪貼簿時，仍顯示連結供手動複製。 */ }
   });
   $("printPaperBtn").addEventListener("click", printPaper);
   $("downloadWordBtn").addEventListener("click", downloadWord);
 
   initFilters();
   refreshLearningCounts();
+  const sharedSet = new URLSearchParams(window.location.search).get("set");
+  if (sharedSet) {
+    const ids = new Set(sharedSet.split(",").filter(Boolean));
+    const questions = allQuestions.filter(q => ids.has(q.id));
+    if (questions.length) startQuestionSet(questions);
+  }
 })();

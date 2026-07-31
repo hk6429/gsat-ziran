@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://gsat-ziran.vercel.app/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260731-2">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="學測自然題庫｜歷屆試題分類練習">
@@ -46,11 +46,16 @@
       <p>每題保留官方原卷題面；難度採官方整題答對率，若只公布選項分析則僅採可直接確認的單選題數值，不拿多選題選項畫記率推估整題難度。</p>
     </section>
 
+    <section class="quick-start" aria-label="快速開始">
+      <button class="btn" id="quickStartBtn">立即開始・隨機 10 題</button>
+      <p>不知道要練什麼？按這裡最快，不用任何設定。想加強特定科目、題型或年度，再往下調整篩選條件。</p>
+    </section>
+
     <section class="card control-card" id="controls">
       <div class="control-heading">
         <div>
           <h2 class="section-title">選擇範圍</h2>
-          <p class="section-note">依照自己的複習進度，組合這次要練的題目。</p>
+          <p class="section-note">勾選想練的科目，或直接調整年度、題型、主題、難度與題數。</p>
         </div>
         <a class="text-link" href="about.html">分類怎麼看？</a>
       </div>
@@ -63,8 +68,8 @@
       </div>
 
       <div class="filter-summary" id="filterSummary" aria-live="polite">正在整理目前條件⋯⋯</div>
-      <details class="filter-details" id="filterDetails">
-        <summary><span id="filterToggleLabel">展開進階篩選</span><small>年份、科目、題型、主題、難度與題數</small></summary>
+      <details class="filter-details" id="filterDetails" open>
+        <summary><span id="filterToggleLabel">收合進階篩選</span><small>年份、科目、題型、主題、難度與題數</small></summary>
         <div class="filters">
         <fieldset class="paper-year-filter main-year-filter field">
           <legend>學年度（可複選）</legend>
@@ -129,11 +134,11 @@
 
       </details>
       <div class="actions">
-        <button class="btn btn-primary" id="startBtn">開始練習</button>
+        <button class="btn btn-outline" id="startBtn">開始練習</button>
         <button class="btn btn-primary review-button" id="reviewBtn">📅 今日該複習 <span id="reviewCount">0</span> 題</button>
         <button class="btn btn-secondary" id="wrongBookBtn">錯題本（<span id="wrongCount">0</span>）</button>
         <button class="btn btn-secondary" id="historyBtn">學習歷程</button>
-        <button class="btn btn-link" id="moreBtn" aria-expanded="false">更多功能⌃</button>
+        <button class="btn btn-link" id="moreBtn" aria-expanded="false">更多功能 ▾</button>
       </div>
       <div class="more-actions" id="moreActions" hidden>
         <button class="btn btn-secondary" id="fullExamBtn">整回模考（需先選年份）</button>
@@ -153,7 +158,7 @@
       <div class="panel-heading">
         <div>
           <h2 class="section-title">出卷模式</h2>
-          <p class="section-note">套用上方篩選後勾選題目，可列印考卷或下載 Word 相容檔。答案與解析另列於教師卷。</p>
+          <p class="section-note">勾選下方題目後，可產生線上測驗連結給學生，或列印學生題卷、教師答案與解析；也可下載 Word 相容檔自行編輯。</p>
         </div>
         <button class="btn btn-link" id="closePaperBtn">關閉</button>
       </div>
@@ -166,15 +171,31 @@
             <div class="paper-year-options" id="paperYearQuickOptions"></div>
           </details>
         </fieldset>
+        <label class="paper-quick-field">難度
+          <select id="paperDifficultyQuick">
+            <option value="all">不限</option>
+            <option value="easy">較易（≥70%）</option>
+            <option value="mid">中等（40–69%）</option>
+            <option value="hard">較難（＜40%）</option>
+          </select>
+        </label>
         <button class="btn btn-secondary" id="paperYearApplyBtn">套用（只勾符合的）</button>
       </div>
       <div class="paper-toolbar">
         <button class="btn btn-secondary" id="paperSelectAllBtn">全選</button>
         <button class="btn btn-secondary" id="paperSelectNoneBtn">全不選</button>
+        <button class="btn btn-primary" id="paperLinkBtn">產生測驗連結</button>
+        <label class="paper-size-field">紙張
+          <select id="paperPageSize">
+            <option value="B4">B4（雙欄推薦）</option>
+            <option value="A4">A4</option>
+          </select>
+        </label>
         <button class="btn btn-primary" id="printPaperBtn">列印考卷</button>
         <button class="btn btn-secondary" id="downloadWordBtn">下載 Word 檔</button>
         <span id="paperSelectedCount">已選 0 題</span>
       </div>
+      <p class="paper-link-output" id="paperLinkOutput" aria-live="polite"></p>
       <div class="paper-list" id="paperList"></div>
     </section>
 
@@ -280,6 +301,6 @@
   <script src="data/explanations-biology-batch16.js?v=20260731-2"></script>
   <script src="data/explanations-biology-written.js?v=20260731-2"></script>
   <script src="data/explanations-full-credit.js?v=20260731-2"></script>
-  <script src="app.js?v=20260731-1"></script>
+  <script src="app.js?v=20260731-2"></script>
 </body>
 </html>
