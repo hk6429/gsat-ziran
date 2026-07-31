@@ -8,14 +8,15 @@
     return;
   }
   const learningData = window.LEARNING_DATA || {};
-  const enrichQuestion = (question, year) => ({
+  const enrichQuestion = (question, bank) => ({
     ...question,
-    year,
+    year: bank.year,
+    officialUrl: bank.official?.test || "",
     explanation: learningData.explanations?.[question.id] || null,
     optionStats: learningData.optionStats?.[question.id] || null
   });
   const newestBank = banks[0];
-  const allQuestions = banks.flatMap(bank => bank.questions.map(q => enrichQuestion(q, bank.year)));
+  const allQuestions = banks.flatMap(bank => bank.questions.map(q => enrichQuestion(q, bank)));
 
   const storage = {
     get(key, fallback) {
@@ -204,10 +205,10 @@
   function questionCard(q, position) {
     const card = document.createElement("article");
     card.className = "card question-card";
-    const emptyVisualOptions = !q.written && Object.values(q.options).some(value => !value);
     const passText = q.pass == null ? "" : `<span class="pass-line">官方答對率 ${(q.pass * 100).toFixed(0)}%</span>`;
-    const passage = q.passage ? `<div class="passage">${escapeHtml(q.passage)}</div>` : "";
+    const passage = q.passage ? `<div class="passage">${window.ScienceQuestionUI.richText(q.passage)}</div>` : "";
     const tags = q.tags.map(tag => `<span class="pill pill-blue">${escapeHtml(tag)}</span>`).join("");
+    const figures = window.ScienceQuestionUI.figuresHtml(q);
 
     let answerArea;
     if (q.written) {
@@ -223,7 +224,7 @@
           <label class="option" data-key="${key}">
             <input type="${type}" name="${q.id}" value="${key}">
             <span class="option-letter">${key}</span>
-            <span class="option-text">${escapeHtml(value)}</span>
+            <span class="option-text">${window.ScienceQuestionUI.richText(value)}</span>
           </label>`).join("") +
         `</div>`;
     }
@@ -239,31 +240,28 @@
           <span class="question-no">${q.year} 年第 ${q.no} 題</span>
         </div>
         ${passage}
-        <p class="stem">${escapeHtml(q.stem)}</p>
+        <p class="stem">${window.ScienceQuestionUI.richText(q.stem)}</p>
+        ${figures}
         ${answerArea}
         <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
         <div class="question-actions">
-          <button class="btn btn-primary" id="submitAnswer">${q.written ? "顯示官方評分要點" : "送出答案"}</button>
+          ${q.written || q.multi ? `<button class="btn btn-primary" id="submitAnswer">${q.written ? "顯示官方評分要點" : "送出答案"}</button>` : ""}
           ${position > 0 ? '<button class="btn btn-secondary" id="prevQuestion">上一題</button>' : ""}
           <button class="btn btn-secondary" id="nextQuestion" hidden>${position === session.questions.length - 1 ? "查看結果" : "下一題"}</button>
           <button class="btn btn-secondary" id="backToFilters">結束本次練習</button>
         </div>
       </div>
-      <details class="source-panel" ${q.written || emptyVisualOptions ? "open" : ""}>
-        <summary>查看大考中心官方原卷題面${emptyVisualOptions ? "（本題含圖形選項）" : ""}</summary>
-        <div class="source-pages">
-          ${q.pages.map((page, i) => `<img src="${page}" alt="${q.year} 學測自然第 ${q.no} 題官方原卷頁面${q.pages.length > 1 ? ` ${i + 1}` : ""}" loading="${i ? "lazy" : "eager"}">`).join("")}
-        </div>
-      </details>`;
+      ${window.ScienceQuestionUI.officialSourceHtml(q)}`;
 
     card.querySelectorAll(".option input").forEach(input => {
       input.addEventListener("change", () => {
         if (!q.multi) card.querySelectorAll(".option").forEach(option => option.classList.remove("selected"));
         input.closest(".option").classList.toggle("selected", input.checked);
+        if (!q.multi && input.checked) submitAnswer(card, q);
       });
     });
 
-    card.querySelector("#submitAnswer").addEventListener("click", () => submitAnswer(card, q));
+    card.querySelector("#submitAnswer")?.addEventListener("click", () => submitAnswer(card, q));
     card.querySelector("#nextQuestion").addEventListener("click", nextQuestion);
     card.querySelector("#prevQuestion")?.addEventListener("click", () => {
       session.index -= 1;
@@ -333,9 +331,9 @@
       <section class="teacher-explanation">
         <p class="encouragement">${escapeHtml(explanation.encouragement)}</p>
         <h3>這題先抓一個重點</h3>
-        <p>${escapeHtml(explanation.keyIdea)}</p>
+        <p>${window.ScienceQuestionUI.richText(explanation.keyIdea)}</p>
         <h3>一步一步想</h3>
-        <ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+        <ol>${explanation.steps.map(step => `<li>${window.ScienceQuestionUI.richText(step)}</li>`).join("")}</ol>
         ${answerGuidance}
         ${explanation.fullCreditNote ? `<p class="full-credit-note"><strong>官方全體給分：</strong>${escapeHtml(explanation.fullCreditNote)}</p>` : ""}
         <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
@@ -383,7 +381,7 @@
         result = { id:q.id, no:q.no, written:false, selected, correct:true, fullCredit:true };
         updateWrongBook(q.id, true);
         session.results[session.index] = result;
-        submit.disabled = true;
+        if (submit) submit.disabled = true;
         next.hidden = false;
         saveHistory(result);
         updateReviewSchedule(q.id, true);
@@ -414,7 +412,7 @@
     }
 
     session.results[session.index] = result;
-    submit.disabled = true;
+    if (submit) submit.disabled = true;
     next.hidden = false;
     saveHistory(result);
     refreshLearningCounts();
@@ -474,7 +472,7 @@
       }
       const fullBank = banks.find(bank => years.has(bank.year));
       if (!fullBank) return;
-      pool = fullBank.questions.map(q => enrichQuestion(q, fullBank.year));
+      pool = fullBank.questions.map(q => enrichQuestion(q, fullBank));
       $("questionCount").value = pool.length;
     }
     const count = Math.min(Math.max(Number($("questionCount").value) || 10, 1), pool.length);

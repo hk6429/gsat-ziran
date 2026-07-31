@@ -23,8 +23,8 @@
       ).join("")}</ul>`;
     return `<section class="teacher-explanation">
       <p class="encouragement">${escapeHtml(explanation.encouragement)}</p>
-      <h3>這題先抓一個重點</h3><p>${escapeHtml(explanation.keyIdea)}</p>
-      <h3>一步一步想</h3><ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+      <h3>這題先抓一個重點</h3><p>${window.ScienceQuestionUI.richText(explanation.keyIdea)}</p>
+      <h3>一步一步想</h3><ol>${explanation.steps.map(step => `<li>${window.ScienceQuestionUI.richText(step)}</li>`).join("")}</ol>
       ${answerGuidance}
       ${explanation.fullCreditNote ? `<p class="full-credit-note"><strong>官方全體給分：</strong>${escapeHtml(explanation.fullCreditNote)}</p>` : ""}
       <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
@@ -85,7 +85,7 @@
       <div class="options">
         ${Object.entries(q.options).map(([key, value]) => `
           <div class="option ${!q.fullCredit && [q.answer, ...(q.alternateAnswers || [])].some(answer => String(answer).includes(key)) ? "correct" : ""}">
-            <span class="option-letter">${key}</span><span class="option-text">${escapeHtml(value)}</span>
+            <span class="option-letter">${key}</span><span class="option-text">${window.ScienceQuestionUI.richText(value)}</span>
           </div>`).join("")}
       </div>`;
     result.innerHTML = `
@@ -99,17 +99,15 @@
             ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
             <span class="question-no">${year} 年第 ${q.no} 題</span>
           </div>
-          ${q.passage ? `<div class="passage">${escapeHtml(q.passage)}</div>` : ""}
-          <p class="stem">${escapeHtml(q.stem)}</p>
+          ${q.passage ? `<div class="passage">${window.ScienceQuestionUI.richText(q.passage)}</div>` : ""}
+          <p class="stem">${window.ScienceQuestionUI.richText(q.stem)}</p>
+          ${window.ScienceQuestionUI.figuresHtml({ ...q, year })}
           ${options}
           <div class="feedback show info"><strong>${q.written ? "官方滿分參考答案與評分要點" : "官方答案"}</strong><br>${escapeHtml(answer)}
           ${teacherExplanationHtml(q, explanation)}${optionStatsHtml(q, optionStats)}</div>
           ${q.pass == null ? "" : `<p class="pass-line">大考中心選項分析：全體到考生答對率 ${(q.pass * 100).toFixed(0)}%</p>`}
         </div>
-        <details class="source-panel" open>
-          <summary>大考中心官方原卷題面</summary>
-          <div class="source-pages">${q.pages.map(page => `<img src="${page}" alt="${year} 學測自然第 ${q.no} 題官方原卷頁面">`).join("")}</div>
-        </details>
+        ${window.ScienceQuestionUI.officialSourceHtml({ ...q, year, officialUrl:bank.official?.test || "" })}
       </article>`;
     history.replaceState(null, "", `?q=${year}-${no}`);
   }

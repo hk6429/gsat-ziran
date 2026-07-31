@@ -402,7 +402,19 @@ check(/function selectedPaperYears\(\)/.test(appJs) && /years\.has\(Number\(inpu
 check(/id="quickStartBtn"/.test(indexHtml) && /function startQuickSession\(\)/.test(appJs), "首頁缺少國文站同型的快速開始入口");
 check(/id="paperDifficultyQuick"/.test(indexHtml) && /id="paperLinkBtn"/.test(indexHtml) && /id="paperPageSize"/.test(indexHtml), "教師出卷缺少難度、測驗連結或紙張尺寸控制");
 check(/教師答案與解析/.test(appJs) && /URLSearchParams/.test(appJs), "教師卷解析或線上測驗連結流程不完整");
+check(/science-renderer\.js/.test(indexHtml) && /katex\.min\.js/.test(indexHtml), "首頁缺少自然科 LaTeX／KaTeX 渲染器");
+check(/science-renderer\.js/.test(checkHtml) && /katex\.min\.js/.test(checkHtml), "查題頁缺少自然科 LaTeX／KaTeX 渲染器");
+check(/data\/figures\.js/.test(indexHtml) && /data\/figures\.js/.test(checkHtml), "首頁與查題頁缺少 figure-only 題圖對照");
+check(/if \(!q\.multi && input\.checked\) submitAnswer\(card, q\)/.test(appJs), "單選題必須點選後立即送出");
+check(!/source-pages/.test(appJs) && !/source-pages/.test(checkJs), "不得再以整頁試卷截圖充當題圖");
 check(/data\/learning\.js/.test(indexHtml) && /data\/learning\.js/.test(checkHtml), "首頁與查題頁都必須載入教師解析與官方選項統計");
+
+const figureMapText = fs.readFileSync(path.join(root, "data/figures.js"), "utf8");
+const figurePaths = [...figureMapText.matchAll(/src:"([^"]+)"/g)].map(match => match[1]);
+check(new Set(figurePaths).size === 52, "figure-only 題圖資產應為 52 張");
+for (const figurePath of figurePaths) {
+  check(fs.existsSync(path.join(root, figurePath)), `缺少 figure-only 題圖：${figurePath}`);
+}
 
 const publicText = ["index.html", "check.html", "about.html", "privacy.html", "README.md", "manifest.json", "robots.txt", "sitemap.xml"]
   .map(file => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
