@@ -16,6 +16,8 @@ const explanationFiles = [
   "explanations-earth-batch7.js",
   "explanations-earth-batch8.js",
   "explanations-earth-batch9.js",
+  "explanations-earth-batch10.js",
+  "explanations-earth-batch11.js",
   "explanations-earth-written.js",
   "explanations-cross-written-earth.js",
   "explanations-cross-batch1.js",
@@ -29,6 +31,8 @@ const explanationFiles = [
   "explanations-physics-batch7.js",
   "explanations-physics-batch8.js",
   "explanations-physics-batch9.js",
+  "explanations-physics-batch10.js",
+  "explanations-physics-batch11.js",
   "explanations-physics-written.js",
   "explanations-cross-written-physics.js",
   "explanations-chemistry.js",
@@ -39,6 +43,7 @@ const explanationFiles = [
   "explanations-chemistry-batch6.js",
   "explanations-chemistry-batch7.js",
   "explanations-chemistry-batch8.js",
+  "explanations-chemistry-batch9.js",
   "explanations-chemistry-written.js",
   "explanations-biology.js",
   "explanations-biology-batch2.js",
@@ -49,6 +54,8 @@ const explanationFiles = [
   "explanations-biology-batch7.js",
   "explanations-biology-batch8.js",
   "explanations-biology-batch9.js",
+  "explanations-biology-batch10.js",
+  "explanations-biology-batch11.js",
   "explanations-biology-written.js"
 ];
 for (const file of explanationFiles) {
@@ -216,7 +223,7 @@ for (const bank of banks) {
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
 const explanations = window.LEARNING_DATA?.explanations || {};
 const optionStats = window.LEARNING_DATA?.optionStats || {};
-check(Object.keys(explanations).length === 1048, "逐題專屬、教師覆核解析必須累計 1048 題");
+check(Object.keys(explanations).length === 1328, "逐題專屬、教師覆核解析必須累計 1328 題");
 for (const q of questionById.values()) {
   if (q.written) check(Boolean(explanations[q.id]), `${q.id} 非選擇題必須附逐步解析與官方對齊拿分要點`);
   if (q.cat === "X") check(Boolean(explanations[q.id]), `${q.id} 跨科整合題必須附逐步解析`);
