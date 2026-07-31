@@ -335,6 +335,7 @@
         <h3>一步一步想</h3>
         <ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
         ${answerGuidance}
+        ${explanation.fullCreditNote ? `<p class="full-credit-note"><strong>官方全體給分：</strong>${escapeHtml(explanation.fullCreditNote)}</p>` : ""}
         <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
       </section>`;
   }

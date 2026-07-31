@@ -20,6 +20,9 @@ const explanationFiles = [
   "explanations-earth-batch11.js",
   "explanations-earth-batch12.js",
   "explanations-earth-batch13.js",
+  "explanations-earth-batch14.js",
+  "explanations-earth-batch15.js",
+  "explanations-earth-batch16.js",
   "explanations-earth-written.js",
   "explanations-cross-written-earth.js",
   "explanations-cross-batch1.js",
@@ -37,6 +40,10 @@ const explanationFiles = [
   "explanations-physics-batch11.js",
   "explanations-physics-batch12.js",
   "explanations-physics-batch13.js",
+  "explanations-physics-batch14.js",
+  "explanations-physics-batch15.js",
+  "explanations-physics-batch16.js",
+  "explanations-physics-batch17.js",
   "explanations-physics-written.js",
   "explanations-cross-written-physics.js",
   "explanations-chemistry.js",
@@ -50,6 +57,9 @@ const explanationFiles = [
   "explanations-chemistry-batch9.js",
   "explanations-chemistry-batch10.js",
   "explanations-chemistry-batch11.js",
+  "explanations-chemistry-batch12.js",
+  "explanations-chemistry-batch13.js",
+  "explanations-chemistry-batch14.js",
   "explanations-chemistry-written.js",
   "explanations-biology.js",
   "explanations-biology-batch2.js",
@@ -64,7 +74,11 @@ const explanationFiles = [
   "explanations-biology-batch11.js",
   "explanations-biology-batch12.js",
   "explanations-biology-batch13.js",
-  "explanations-biology-written.js"
+  "explanations-biology-batch14.js",
+  "explanations-biology-batch15.js",
+  "explanations-biology-batch16.js",
+  "explanations-biology-written.js",
+  "explanations-full-credit.js"
 ];
 for (const file of explanationFiles) {
   await import(pathToFileURL(path.join(root, "data", file)));
@@ -231,7 +245,7 @@ for (const bank of banks) {
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
 const explanations = window.LEARNING_DATA?.explanations || {};
 const optionStats = window.LEARNING_DATA?.optionStats || {};
-check(Object.keys(explanations).length === 1648, "逐題專屬、教師覆核解析必須累計 1648 題");
+check(Object.keys(explanations).length === 2128, "逐題專屬、教師覆核解析必須累計 2128 題");
 for (const q of questionById.values()) {
   if (q.written) check(Boolean(explanations[q.id]), `${q.id} 非選擇題必須附逐步解析與官方對齊拿分要點`);
   if (q.cat === "X") check(Boolean(explanations[q.id]), `${q.id} 跨科整合題必須附逐步解析`);
@@ -258,6 +272,10 @@ for (const [id, explanation] of Object.entries(explanations)) {
     check(Array.isArray(explanation.scoringPoints) && explanation.scoringPoints.length >= 1, `${id} 非選擇題解析缺拿分要點`);
   } else {
     check(Object.keys(explanation.optionAnalysis || {}).join("") === Object.keys(q.options || {}).join(""), `${id} 選項解析未完整對應原題`);
+    if (q.fullCredit) {
+      check(Boolean(explanation.fullCreditNote), `${id} 全體給分解析缺官方註記`);
+      check(Object.values(explanation.optionAnalysis || {}).every(note => note.verdict === "neutral"), `${id} 全體給分題不得猜測正確選項`);
+    }
   }
   const markedCorrect = Object.entries(explanation.optionAnalysis || {})
     .filter(([, note]) => note.verdict === "correct")
