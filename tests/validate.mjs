@@ -12,14 +12,23 @@ const explanationFiles = [
   "explanations-earth-batch3.js",
   "explanations-earth-batch4.js",
   "explanations-earth-batch5.js",
+  "explanations-earth-batch6.js",
+  "explanations-earth-batch7.js",
+  "explanations-earth-batch8.js",
+  "explanations-earth-batch9.js",
   "explanations-earth-written.js",
   "explanations-cross-written-earth.js",
+  "explanations-cross-batch1.js",
+  "explanations-cross-batch2.js",
   "explanations-physics.js",
   "explanations-physics-batch2.js",
   "explanations-physics-batch3.js",
   "explanations-physics-batch4.js",
   "explanations-physics-batch5.js",
   "explanations-physics-batch6.js",
+  "explanations-physics-batch7.js",
+  "explanations-physics-batch8.js",
+  "explanations-physics-batch9.js",
   "explanations-physics-written.js",
   "explanations-cross-written-physics.js",
   "explanations-chemistry.js",
@@ -28,6 +37,8 @@ const explanationFiles = [
   "explanations-chemistry-batch4.js",
   "explanations-chemistry-batch5.js",
   "explanations-chemistry-batch6.js",
+  "explanations-chemistry-batch7.js",
+  "explanations-chemistry-batch8.js",
   "explanations-chemistry-written.js",
   "explanations-biology.js",
   "explanations-biology-batch2.js",
@@ -35,6 +46,9 @@ const explanationFiles = [
   "explanations-biology-batch4.js",
   "explanations-biology-batch5.js",
   "explanations-biology-batch6.js",
+  "explanations-biology-batch7.js",
+  "explanations-biology-batch8.js",
+  "explanations-biology-batch9.js",
   "explanations-biology-written.js"
 ];
 for (const file of explanationFiles) {
@@ -202,9 +216,10 @@ for (const bank of banks) {
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
 const explanations = window.LEARNING_DATA?.explanations || {};
 const optionStats = window.LEARNING_DATA?.optionStats || {};
-check(Object.keys(explanations).length === 591, "逐題專屬、教師覆核解析必須累計 591 題");
+check(Object.keys(explanations).length === 1048, "逐題專屬、教師覆核解析必須累計 1048 題");
 for (const q of questionById.values()) {
   if (q.written) check(Boolean(explanations[q.id]), `${q.id} 非選擇題必須附逐步解析與官方對齊拿分要點`);
+  if (q.cat === "X") check(Boolean(explanations[q.id]), `${q.id} 跨科整合題必須附逐步解析`);
 }
 for (const file of explanationFiles) {
   const source = fs.readFileSync(path.join(root, "data", file), "utf8");
