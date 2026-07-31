@@ -60,6 +60,8 @@ const explanationFiles = [
   "explanations-chemistry-batch12.js",
   "explanations-chemistry-batch13.js",
   "explanations-chemistry-batch14.js",
+  "explanations-chemistry-batch15.js",
+  "explanations-chemistry-batch16.js",
   "explanations-chemistry-written.js",
   "explanations-biology.js",
   "explanations-biology-batch2.js",
@@ -245,8 +247,9 @@ for (const bank of banks) {
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
 const explanations = window.LEARNING_DATA?.explanations || {};
 const optionStats = window.LEARNING_DATA?.optionStats || {};
-check(Object.keys(explanations).length === 2128, "逐題專屬、教師覆核解析必須累計 2128 題");
+check(Object.keys(explanations).length === 2181, "全題庫 2,181 題都必須有逐題專屬、教師覆核解析");
 for (const q of questionById.values()) {
+  check(Boolean(explanations[q.id]), `${q.id} 必須附上逐題專屬教師解析`);
   if (q.written) check(Boolean(explanations[q.id]), `${q.id} 非選擇題必須附逐步解析與官方對齊拿分要點`);
   if (q.cat === "X") check(Boolean(explanations[q.id]), `${q.id} 跨科整合題必須附逐步解析`);
 }
