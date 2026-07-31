@@ -6,7 +6,38 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 global.window = {};
 await import(pathToFileURL(path.join(root, "data", "bank.js")));
 await import(pathToFileURL(path.join(root, "data", "learning.js")));
-for (const file of ["explanations-earth.js", "explanations-physics.js", "explanations-chemistry.js", "explanations-biology.js"]) {
+const explanationFiles = [
+  "explanations-earth.js",
+  "explanations-earth-batch2.js",
+  "explanations-earth-batch3.js",
+  "explanations-earth-batch4.js",
+  "explanations-earth-batch5.js",
+  "explanations-earth-written.js",
+  "explanations-cross-written-earth.js",
+  "explanations-physics.js",
+  "explanations-physics-batch2.js",
+  "explanations-physics-batch3.js",
+  "explanations-physics-batch4.js",
+  "explanations-physics-batch5.js",
+  "explanations-physics-batch6.js",
+  "explanations-physics-written.js",
+  "explanations-cross-written-physics.js",
+  "explanations-chemistry.js",
+  "explanations-chemistry-batch2.js",
+  "explanations-chemistry-batch3.js",
+  "explanations-chemistry-batch4.js",
+  "explanations-chemistry-batch5.js",
+  "explanations-chemistry-batch6.js",
+  "explanations-chemistry-written.js",
+  "explanations-biology.js",
+  "explanations-biology-batch2.js",
+  "explanations-biology-batch3.js",
+  "explanations-biology-batch4.js",
+  "explanations-biology-batch5.js",
+  "explanations-biology-batch6.js",
+  "explanations-biology-written.js"
+];
+for (const file of explanationFiles) {
   await import(pathToFileURL(path.join(root, "data", file)));
 }
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
@@ -171,8 +202,20 @@ for (const bank of banks) {
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
 const explanations = window.LEARNING_DATA?.explanations || {};
 const optionStats = window.LEARNING_DATA?.optionStats || {};
-check(Object.keys(explanations).length === 40, "第一批教師覆核解析必須為四科各 10 題，共 40 題");
-check(Object.keys(optionStats).length === 48, "115 年選擇題官方選項統計必須完整匯入 48 題");
+check(Object.keys(explanations).length === 591, "逐題專屬、教師覆核解析必須累計 591 題");
+for (const q of questionById.values()) {
+  if (q.written) check(Boolean(explanations[q.id]), `${q.id} 非選擇題必須附逐步解析與官方對齊拿分要點`);
+}
+for (const file of explanationFiles) {
+  const source = fs.readFileSync(path.join(root, "data", file), "utf8");
+  check(!/window\.BANK|questionMap|question\.tags|question\.options|question\.answer/.test(source), `${file} 不得由題庫欄位動態套用通用解析模板`);
+}
+check(Object.keys(optionStats).length === 1608, "91–115 年官方選項統計必須完整匯入 1,608 題");
+for (const bank of banks.filter(bank => bank.year >= 91)) {
+  for (const q of bank.questions.filter(q => !q.written)) {
+    check(Boolean(optionStats[q.id]), `${q.id} 必須附上大考中心官方選項畫記率`);
+  }
+}
 for (const [id, explanation] of Object.entries(explanations)) {
   const q = questionById.get(id);
   check(Boolean(q), `${id} 解析找不到原題`);
@@ -181,19 +224,39 @@ for (const [id, explanation] of Object.entries(explanations)) {
   check(["earth", "physics", "chemistry", "biology"].includes(explanation.reviewerRole), `${id} 缺科任教師角色`);
   check(Boolean(explanation.encouragement && explanation.keyIdea && explanation.takeaway), `${id} 解析缺正向開場、核心概念或帶走句`);
   check(Array.isArray(explanation.steps) && explanation.steps.length >= 2 && explanation.steps.length <= 5, `${id} 解析步驟必須為 2–5 步`);
-  check(Object.keys(explanation.optionAnalysis || {}).join("") === Object.keys(q.options || {}).join(""), `${id} 選項解析未完整對應原題`);
+  if (q.written) {
+    check(Array.isArray(explanation.scoringPoints) && explanation.scoringPoints.length >= 1, `${id} 非選擇題解析缺拿分要點`);
+  } else {
+    check(Object.keys(explanation.optionAnalysis || {}).join("") === Object.keys(q.options || {}).join(""), `${id} 選項解析未完整對應原題`);
+  }
   const markedCorrect = Object.entries(explanation.optionAnalysis || {})
     .filter(([, note]) => note.verdict === "correct")
     .map(([key]) => key)
     .join("");
-  check(markedCorrect === q.answer, `${id} 解析的正確選項與官方答案不一致`);
+  if (!q.written) check(markedCorrect === q.answer, `${id} 解析的正確選項與官方答案不一致`);
 }
 for (const [id, stats] of Object.entries(optionStats)) {
   const q = questionById.get(id);
-  check(Boolean(q) && id.startsWith("學-115-"), `${id} 選項統計沒有對應 115 年原題`);
+  check(Boolean(q) && /^學-(?:9[1-9]|10[0-9]|11[0-5])-/.test(id), `${id} 選項統計沒有對應官方已匯入年份原題`);
   if (!q) continue;
+  check(stats.metric === "selectionRate" && stats.unit === "percent", `${id} 必須明確標示為官方選項畫記百分率`);
+  check(/^大考中心 /.test(stats.source?.label || ""), `${id} 選項畫記率缺大考中心來源標示`);
+  check(
+    typeof stats.source?.localFile === "string" &&
+    fs.existsSync(path.join(root, stats.source.localFile)),
+    `${id} 選項畫記率缺官方原始檔`
+  );
   for (const group of ["all", "high", "low"]) {
-    check(Object.keys(stats.groups?.[group]?.options || {}).join("") === Object.keys(q.options).join(""), `${id} ${group} 組選項統計欄位不完整`);
+    const statsKeys = Object.keys(stats.groups?.[group]?.options || {});
+    const questionKeys = Object.keys(q.options);
+    check(statsKeys.every(key => questionKeys.includes(key)), `${id} ${group} 組出現原題不存在的選項統計`);
+    if (stats.completeness !== "partial") {
+      check(statsKeys.join("") === questionKeys.join(""), `${id} ${group} 組選項統計欄位不完整`);
+    }
+    check(
+      Object.values(stats.groups?.[group]?.options || {}).every(value => Number.isFinite(value) && value >= 0 && value <= 100),
+      `${id} ${group} 組選項畫記率必須是 0–100 的官方百分比`
+    );
     check(Number.isFinite(stats.groups?.[group]?.unanswered), `${id} ${group} 組未答率缺漏`);
   }
 }
@@ -266,7 +329,7 @@ check(n83q10?.answer === "A" && Object.keys(n83q10?.options || {}).join("") === 
 const n83q53 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 53);
 check(n83q53?.answer === "D" && /第 53–57 題為綜合型題組/.test(n83q53?.passage || ""), "83 年第 53 題必須保留河口綜合題組情境");
 
-for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", "data/explanations-earth.js", "data/explanations-physics.js", "data/explanations-chemistry.js", "data/explanations-biology.js"]) {
+for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", ...explanationFiles.map(file => `data/${file}`)]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
 }
 
@@ -298,5 +361,6 @@ if (errors.length) {
 
 console.log(
   `VALIDATE=PASS years=115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83 questions=${totalQuestions} choices=${totalChoices} ` +
-  `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} imageRefs=${totalImageRefs}`
+  `written=${totalWritten} officialAnswerMatches=${totalOfficialMatches} explanations=${Object.keys(explanations).length} ` +
+  `officialOptionStats=${Object.keys(optionStats).length} imageRefs=${totalImageRefs}`
 );

@@ -12,30 +12,43 @@
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
   })[char]);
 
-  function teacherExplanationHtml(explanation) {
+  function teacherExplanationHtml(q, explanation) {
     if (!explanation || explanation.reviewStatus !== "approved") {
       return '<section class="teacher-explanation pending-explanation"><strong>老師解析正在逐題覆核</strong><p>通過科任教師檢查後才會公開，不用猜的方式補內容。</p></section>';
     }
+    const answerGuidance = q.written
+      ? `<h3>拿分要點</h3><ul class="option-analysis">${(explanation.scoringPoints || []).map(point => `<li>${escapeHtml(point)}</li>`).join("")}</ul>`
+      : `<h3>每個選項怎麼看</h3><ul class="option-analysis">${Object.entries(explanation.optionAnalysis || {}).map(([key, note]) =>
+        `<li class="${note.verdict === "correct" ? "correct-note" : ""}"><b>${key}</b>：${escapeHtml(note.reason)}</li>`
+      ).join("")}</ul>`;
     return `<section class="teacher-explanation">
       <p class="encouragement">${escapeHtml(explanation.encouragement)}</p>
       <h3>這題先抓一個重點</h3><p>${escapeHtml(explanation.keyIdea)}</p>
       <h3>一步一步想</h3><ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
-      <h3>每個選項怎麼看</h3><ul class="option-analysis">${Object.entries(explanation.optionAnalysis || {}).map(([key, note]) =>
-        `<li class="${note.verdict === "correct" ? "correct-note" : ""}"><b>${key}</b>：${escapeHtml(note.reason)}</li>`
-      ).join("")}</ul>
+      ${answerGuidance}
       <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
     </section>`;
   }
 
   function optionStatsHtml(q, stats) {
-    if (!stats?.groups) return "";
+    if (q.written) return "";
+    if (!stats?.groups) {
+      return `<section class="option-stats option-stats-unavailable">
+        <strong>官方選項畫記率</strong>
+        <p>大考中心此學年度未公布逐選項畫記率，本站維持空白，不自行推估。</p>
+      </section>`;
+    }
     const correct = new Set(String(q.answer || "").split(""));
-    const rows = Object.entries(stats.groups.all.options).map(([key, rate]) => `
-      <div class="option-rate-row"><span>(${key})${correct.has(key) ? " ✓正解" : ""}</span>
-      <span class="option-rate-track"><i class="${correct.has(key) ? "correct-rate" : ""}" style="width:${Math.min(rate, 100)}%"></i></span><b>${rate}%</b></div>`).join("");
+    const rows = Object.keys(q.options).map(key => {
+      const rate = stats.groups.all.options[key];
+      return Number.isFinite(rate)
+        ? `<div class="option-rate-row"><span>(${key})${correct.has(key) ? " ✓正解" : ""}</span>
+          <span class="option-rate-track"><i class="${correct.has(key) ? "correct-rate" : ""}" style="width:${Math.min(rate, 100)}%"></i></span><b>${rate}%</b></div>`
+        : `<div class="option-rate-row option-rate-missing"><span>(${key})${correct.has(key) ? " ✓正解" : ""}</span><span>官方表未列此格</span><b>—</b></div>`;
+    }).join("");
     return `<section class="option-stats"><strong>全體考生選項畫記率（大考中心官方統計）</strong>
       <div class="option-rate-rows">${rows}</div>
-      <small>未答 ${stats.groups.all.unanswered}%${q.multi ? "；多選題各選項畫記率合計不一定是 100%。" : "；合計可能因四捨五入略有差異。"}</small>
+      <small>未答 ${stats.groups.all.unanswered}%${q.multi ? "；多選題各選項畫記率合計不一定是 100%。" : "；合計可能因四捨五入略有差異。"}${stats.completeness === "partial" ? " 官方原表有未列數值，本頁維持缺漏，不自行反推。" : ""}</small>
     </section>`;
   }
 
@@ -89,7 +102,7 @@
           <p class="stem">${escapeHtml(q.stem)}</p>
           ${options}
           <div class="feedback show info"><strong>${q.written ? "官方滿分參考答案與評分要點" : "官方答案"}</strong><br>${escapeHtml(answer)}
-          ${teacherExplanationHtml(explanation)}${optionStatsHtml(q, optionStats)}</div>
+          ${teacherExplanationHtml(q, explanation)}${optionStatsHtml(q, optionStats)}</div>
           ${q.pass == null ? "" : `<p class="pass-line">大考中心選項分析：全體到考生答對率 ${(q.pass * 100).toFixed(0)}%</p>`}
         </div>
         <details class="source-panel" open>

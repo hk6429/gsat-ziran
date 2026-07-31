@@ -1,0 +1,2321 @@
+{
+  "year": 110,
+  "subject": "自然",
+  "metric": "selectionRate",
+  "unit": "percent",
+  "sourceFile": "sources/official/110/110-gsat-report.pdf",
+  "questions": {
+    "1": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 85,
+            "B": 6,
+            "C": 4,
+            "D": 2,
+            "E": 3
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 98,
+            "B": 1,
+            "C": 0,
+            "D": 0,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 68,
+            "B": 12,
+            "C": 10,
+            "D": 5,
+            "E": 5
+          }
+        }
+      }
+    },
+    "2": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 9,
+            "C": 14,
+            "D": 22,
+            "E": 45
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 5,
+            "B": 0,
+            "C": 7,
+            "D": 2,
+            "E": 85
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 21,
+            "C": 16,
+            "D": 37,
+            "E": 11
+          }
+        }
+      }
+    },
+    "3": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 14,
+            "C": 11,
+            "D": 39,
+            "E": 26
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 5,
+            "B": 15,
+            "C": 1,
+            "D": 66,
+            "E": 13
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 11,
+            "C": 24,
+            "D": 21,
+            "E": 32
+          }
+        }
+      }
+    },
+    "4": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 46,
+            "C": 6,
+            "D": 22,
+            "E": 17
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 63,
+            "C": 1,
+            "D": 13,
+            "E": 13
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 35,
+            "C": 14,
+            "D": 25,
+            "E": 16
+          }
+        }
+      }
+    },
+    "5": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 28,
+            "C": 10,
+            "D": 47,
+            "E": 7
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 11,
+            "C": 1,
+            "D": 82,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 33,
+            "C": 21,
+            "D": 23,
+            "E": 11
+          }
+        }
+      }
+    },
+    "6": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 12,
+            "B": 63,
+            "C": 6,
+            "D": 12,
+            "E": 7
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 90,
+            "C": 1,
+            "D": 2,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 16,
+            "B": 33,
+            "C": 14,
+            "D": 21,
+            "E": 16
+          }
+        }
+      }
+    },
+    "7": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 3,
+            "B": 15,
+            "C": 60,
+            "D": 20,
+            "E": 2
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 7,
+            "C": 83,
+            "D": 9,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 18,
+            "C": 46,
+            "D": 25,
+            "E": 4
+          }
+        }
+      }
+    },
+    "8": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 23,
+            "C": 9,
+            "D": 44,
+            "E": 18
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 13,
+            "C": 1,
+            "D": 76,
+            "E": 9
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 29,
+            "C": 22,
+            "D": 18,
+            "E": 20
+          }
+        }
+      }
+    },
+    "9": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 57,
+            "B": 11,
+            "C": 8,
+            "D": 21,
+            "E": 3
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 81,
+            "B": 3,
+            "C": 1,
+            "D": 14,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 30,
+            "B": 21,
+            "C": 17,
+            "D": 26,
+            "E": 6
+          }
+        }
+      }
+    },
+    "10": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 49,
+            "B": 8,
+            "C": 18,
+            "D": 22,
+            "E": 4
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 90,
+            "B": 4,
+            "C": 1,
+            "D": 4,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 11,
+            "C": 37,
+            "D": 37,
+            "E": 5
+          }
+        }
+      }
+    },
+    "11": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 15,
+            "C": 35,
+            "D": 7,
+            "E": 31
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 7,
+            "B": 11,
+            "C": 43,
+            "D": 1,
+            "E": 38
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 14,
+            "B": 18,
+            "C": 29,
+            "D": 16,
+            "E": 23
+          }
+        }
+      }
+    },
+    "12": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 72,
+            "B": 7,
+            "C": 4,
+            "D": 6,
+            "E": 12
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 85,
+            "B": 0,
+            "C": 0,
+            "D": 1,
+            "E": 14
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 51,
+            "B": 16,
+            "C": 10,
+            "D": 12,
+            "E": 10
+          }
+        }
+      }
+    },
+    "13": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 45,
+            "B": 16,
+            "C": 9,
+            "D": 25,
+            "E": 5
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 86,
+            "B": 1,
+            "C": 2,
+            "D": 11,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 31,
+            "C": 15,
+            "D": 31,
+            "E": 11
+          }
+        }
+      }
+    },
+    "14": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 14,
+            "C": 48,
+            "D": 20,
+            "E": 8
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 4,
+            "C": 82,
+            "D": 2,
+            "E": 5
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 22,
+            "C": 24,
+            "D": 34,
+            "E": 10
+          }
+        }
+      }
+    },
+    "15": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 19,
+            "C": 25,
+            "D": 40,
+            "E": 3
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 16,
+            "C": 7,
+            "D": 69,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 23,
+            "C": 35,
+            "D": 19,
+            "E": 5
+          }
+        }
+      }
+    },
+    "16": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 14,
+            "C": 66,
+            "D": 8,
+            "E": 3
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 5,
+            "C": 92,
+            "D": 2,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 24,
+            "C": 35,
+            "D": 15,
+            "E": 8
+          }
+        }
+      }
+    },
+    "17": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 33,
+            "C": 8,
+            "D": 17,
+            "E": 33
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 3,
+            "B": 34,
+            "C": 1,
+            "D": 10,
+            "E": 53
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 17,
+            "B": 25,
+            "C": 18,
+            "D": 20,
+            "E": 20
+          }
+        }
+      }
+    },
+    "18": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 26,
+            "C": 40,
+            "D": 6,
+            "E": 26
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 0,
+            "B": 31,
+            "C": 15,
+            "D": 0,
+            "E": 53
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 3,
+            "B": 22,
+            "C": 52,
+            "D": 14,
+            "E": 8
+          }
+        }
+      }
+    },
+    "19": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 5,
+            "B": 71,
+            "C": 19,
+            "D": 2,
+            "E": 3
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 96,
+            "C": 2,
+            "D": 0,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 40,
+            "C": 36,
+            "D": 6,
+            "E": 8
+          }
+        }
+      }
+    },
+    "20": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 57,
+            "C": 19,
+            "D": 12,
+            "E": 2
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 2,
+            "B": 91,
+            "C": 2,
+            "D": 5,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 24,
+            "C": 38,
+            "D": 17,
+            "E": 4
+          }
+        }
+      }
+    },
+    "21": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 5,
+            "B": 16,
+            "C": 18,
+            "D": 37,
+            "E": 23
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 2,
+            "B": 9,
+            "C": 15,
+            "D": 52,
+            "E": 21
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 24,
+            "C": 20,
+            "D": 23,
+            "E": 24
+          }
+        }
+      }
+    },
+    "22": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 19,
+            "C": 14,
+            "D": 13,
+            "E": 36
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 6,
+            "B": 15,
+            "C": 11,
+            "D": 11,
+            "E": 56
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 27,
+            "B": 23,
+            "C": 17,
+            "D": 15,
+            "E": 18
+          }
+        }
+      }
+    },
+    "23": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 47,
+            "B": 15,
+            "C": 35,
+            "D": 42,
+            "E": 59
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 58,
+            "B": 7,
+            "C": 24,
+            "D": 45,
+            "E": 65
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 41,
+            "B": 25,
+            "C": 47,
+            "D": 36,
+            "E": 50
+          }
+        }
+      }
+    },
+    "24": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 53,
+            "B": 72,
+            "C": 39,
+            "D": 26,
+            "E": 10
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 72,
+            "B": 84,
+            "C": 14,
+            "D": 24,
+            "E": 7
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 39,
+            "B": 61,
+            "C": 58,
+            "D": 28,
+            "E": 13
+          }
+        }
+      }
+    },
+    "25": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 34,
+            "B": 81,
+            "C": 30,
+            "D": 39,
+            "E": 13
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 99,
+            "C": 18,
+            "D": 64,
+            "E": 2
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 43,
+            "B": 57,
+            "C": 42,
+            "D": 29,
+            "E": 26
+          }
+        }
+      }
+    },
+    "26": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 87,
+            "B": 11,
+            "C": 70,
+            "D": 5,
+            "E": 26
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 97,
+            "B": 3,
+            "C": 85,
+            "D": 1,
+            "E": 13
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 71,
+            "B": 22,
+            "C": 56,
+            "D": 12,
+            "E": 39
+          }
+        }
+      }
+    },
+    "27": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 27,
+            "C": 67,
+            "D": 75,
+            "E": 21
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 4,
+            "C": 93,
+            "D": 98,
+            "E": 4
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 29,
+            "B": 49,
+            "C": 43,
+            "D": 49,
+            "E": 34
+          }
+        }
+      }
+    },
+    "28": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 15,
+            "C": 81,
+            "D": 80,
+            "E": 8
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 2,
+            "B": 1,
+            "C": 97,
+            "D": 99,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 26,
+            "B": 36,
+            "C": 63,
+            "D": 52,
+            "E": 21
+          }
+        }
+      }
+    },
+    "29": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 26,
+            "B": 18,
+            "C": 56,
+            "D": 82,
+            "E": 17
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 12,
+            "B": 8,
+            "C": 68,
+            "D": 97,
+            "E": 14
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 38,
+            "B": 28,
+            "C": 50,
+            "D": 60,
+            "E": 23
+          }
+        }
+      }
+    },
+    "30": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 66,
+            "B": 31,
+            "C": 88,
+            "D": 90,
+            "E": 25
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 81,
+            "B": 12,
+            "C": 94,
+            "D": 98,
+            "E": 14
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 56,
+            "B": 45,
+            "C": 80,
+            "D": 81,
+            "E": 35
+          }
+        }
+      }
+    },
+    "31": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 16,
+            "C": 88,
+            "D": 7,
+            "E": 79
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 7,
+            "C": 97,
+            "D": 1,
+            "E": 90
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 20,
+            "B": 27,
+            "C": 74,
+            "D": 15,
+            "E": 63
+          }
+        }
+      }
+    },
+    "32": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 36,
+            "B": 63,
+            "C": 11,
+            "D": 82,
+            "E": 7
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 16,
+            "B": 83,
+            "C": 3,
+            "D": 95,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 48,
+            "B": 48,
+            "C": 24,
+            "D": 63,
+            "E": 16
+          }
+        }
+      }
+    },
+    "33": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 33,
+            "B": 90,
+            "C": 91,
+            "D": 17,
+            "E": 69
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 97,
+            "C": 98,
+            "D": 4,
+            "E": 91
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 56,
+            "B": 79,
+            "C": 79,
+            "D": 37,
+            "E": 46
+          }
+        }
+      }
+    },
+    "34": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 33,
+            "B": 15,
+            "C": 86,
+            "D": 13,
+            "E": 52
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 16,
+            "B": 2,
+            "C": 99,
+            "D": 1,
+            "E": 81
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 41,
+            "B": 35,
+            "C": 63,
+            "D": 30,
+            "E": 29
+          }
+        }
+      }
+    },
+    "35": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 76,
+            "B": 13,
+            "C": 30,
+            "D": 66,
+            "E": 15
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 89,
+            "B": 2,
+            "C": 13,
+            "D": 86,
+            "E": 8
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 57,
+            "B": 29,
+            "C": 44,
+            "D": 45,
+            "E": 22
+          }
+        }
+      }
+    },
+    "36": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 62,
+            "B": 35,
+            "C": 7,
+            "D": 45,
+            "E": 51
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 88,
+            "B": 8,
+            "C": 1,
+            "D": 31,
+            "E": 72
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 33,
+            "B": 62,
+            "C": 18,
+            "D": 57,
+            "E": 29
+          }
+        }
+      }
+    },
+    "37": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 26,
+            "B": 5,
+            "C": 68,
+            "D": 2,
+            "E": 0
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 7,
+            "B": 0,
+            "C": 93,
+            "D": 0,
+            "E": 0
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 48,
+            "B": 12,
+            "C": 37,
+            "D": 4,
+            "E": 1
+          }
+        }
+      }
+    },
+    "38": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 73,
+            "B": 57,
+            "C": 32,
+            "D": 26,
+            "E": 8
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 95,
+            "B": 82,
+            "C": 13,
+            "D": 7,
+            "E": 2
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 44,
+            "B": 37,
+            "C": 49,
+            "D": 44,
+            "E": 17
+          }
+        }
+      }
+    },
+    "39": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 8,
+            "C": 70,
+            "D": 8,
+            "E": 7
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 0,
+            "C": 95,
+            "D": 2,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 17,
+            "B": 20,
+            "C": 39,
+            "D": 15,
+            "E": 12
+          }
+        }
+      }
+    },
+    "40": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 10,
+            "B": 55,
+            "C": 19,
+            "D": 11,
+            "E": 5
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 7,
+            "B": 82,
+            "C": 6,
+            "D": 3,
+            "E": 2
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 35,
+            "C": 32,
+            "D": 16,
+            "E": 6
+          }
+        }
+      }
+    },
+    "41": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 67,
+            "B": 22,
+            "C": 33,
+            "D": 11,
+            "E": 65
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 79,
+            "B": 8,
+            "C": 30,
+            "D": 5,
+            "E": 78
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 52,
+            "B": 40,
+            "C": 32,
+            "D": 19,
+            "E": 51
+          }
+        }
+      }
+    },
+    "42": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 76,
+            "B": 30,
+            "C": 16,
+            "D": 65,
+            "E": 13
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 97,
+            "B": 8,
+            "C": 4,
+            "D": 87,
+            "E": 5
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 50,
+            "B": 48,
+            "C": 30,
+            "D": 49,
+            "E": 21
+          }
+        }
+      }
+    },
+    "43": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 22,
+            "B": 11,
+            "C": 13,
+            "D": 37,
+            "E": 18
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 19,
+            "B": 2,
+            "C": 4,
+            "D": 65,
+            "E": 10
+          }
+        },
+        "low": {
+          "unanswered": 1,
+          "options": {
+            "A": 19,
+            "B": 22,
+            "C": 25,
+            "D": 17,
+            "E": 19
+          }
+        }
+      }
+    },
+    "44": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 77,
+            "B": 41,
+            "C": 25,
+            "D": 44,
+            "E": 14
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 93,
+            "B": 63,
+            "C": 3,
+            "D": 39,
+            "E": 5
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 56,
+            "B": 25,
+            "C": 48,
+            "D": 44,
+            "E": 24
+          }
+        }
+      }
+    },
+    "45": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 5,
+            "C": 54,
+            "D": 5,
+            "E": 32
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 2,
+            "C": 42,
+            "D": 3,
+            "E": 52
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 11,
+            "C": 58,
+            "D": 8,
+            "E": 18
+          }
+        }
+      }
+    },
+    "46": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 17,
+            "B": 83,
+            "C": 85,
+            "D": 92,
+            "E": 17
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 97,
+            "C": 91,
+            "D": 99,
+            "E": 7
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 33,
+            "B": 67,
+            "C": 77,
+            "D": 80,
+            "E": 30
+          }
+        }
+      }
+    },
+    "47": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 11,
+            "B": 4,
+            "C": 8,
+            "D": 78,
+            "E": 2
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 5,
+            "B": 1,
+            "C": 3,
+            "D": 92,
+            "E": 1
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 9,
+            "C": 16,
+            "D": 58,
+            "E": 5
+          }
+        }
+      }
+    },
+    "48": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 77,
+            "B": 44,
+            "C": 74,
+            "D": 46,
+            "E": 67
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 95,
+            "B": 24,
+            "C": 91,
+            "D": 22,
+            "E": 70
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 57,
+            "B": 59,
+            "C": 62,
+            "D": 62,
+            "E": 63
+          }
+        }
+      }
+    },
+    "49": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 37,
+            "B": 81,
+            "C": 76,
+            "D": 48,
+            "E": 74
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 17,
+            "B": 94,
+            "C": 82,
+            "D": 29,
+            "E": 84
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 51,
+            "B": 67,
+            "C": 72,
+            "D": 63,
+            "E": 62
+          }
+        }
+      }
+    },
+    "50": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 75,
+            "B": 79,
+            "C": 35,
+            "D": 74,
+            "E": 41
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 92,
+            "B": 86,
+            "C": 7,
+            "D": 86,
+            "E": 31
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 57,
+            "B": 68,
+            "C": 62,
+            "D": 64,
+            "E": 46
+          }
+        }
+      }
+    },
+    "51": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 66,
+            "B": 35,
+            "C": 74,
+            "D": 85,
+            "E": 41
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 91,
+            "B": 5,
+            "C": 93,
+            "D": 97,
+            "E": 13
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 47,
+            "B": 64,
+            "C": 56,
+            "D": 70,
+            "E": 61
+          }
+        }
+      }
+    },
+    "52": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 61,
+            "C": 29,
+            "D": 43,
+            "E": 50
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 7,
+            "B": 64,
+            "C": 3,
+            "D": 45,
+            "E": 81
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 25,
+            "B": 56,
+            "C": 54,
+            "D": 38,
+            "E": 27
+          }
+        }
+      }
+    },
+    "53": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 74,
+            "B": 26,
+            "C": 52,
+            "D": 27,
+            "E": 15
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 92,
+            "B": 22,
+            "C": 66,
+            "D": 10,
+            "E": 4
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 51,
+            "B": 33,
+            "C": 44,
+            "D": 42,
+            "E": 25
+          }
+        }
+      }
+    },
+    "54": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 79,
+            "B": 19,
+            "C": 49,
+            "D": 81,
+            "E": 76
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 92,
+            "B": 2,
+            "C": 42,
+            "D": 91,
+            "E": 78
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 63,
+            "B": 42,
+            "C": 54,
+            "D": 72,
+            "E": 69
+          }
+        }
+      }
+    },
+    "55": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 15,
+            "C": 43,
+            "D": 13,
+            "E": 11
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 6,
+            "C": 77,
+            "D": 5,
+            "E": 4
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 22,
+            "C": 25,
+            "D": 19,
+            "E": 18
+          }
+        }
+      }
+    },
+    "56": {
+      "groups": {
+        "all": {
+          "unanswered": 1,
+          "options": {
+            "A": 14,
+            "B": 19,
+            "C": 21,
+            "D": 36,
+            "E": 11
+          }
+        },
+        "high": {
+          "unanswered": 1,
+          "options": {
+            "A": 10,
+            "B": 9,
+            "C": 14,
+            "D": 57,
+            "E": 9
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 16,
+            "B": 29,
+            "C": 26,
+            "D": 19,
+            "E": 11
+          }
+        }
+      }
+    },
+    "57": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 75,
+            "B": 77,
+            "C": 23,
+            "D": 31,
+            "E": 91
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 93,
+            "B": 93,
+            "C": 6,
+            "D": 8,
+            "E": 99
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 56,
+            "B": 62,
+            "C": 45,
+            "D": 52,
+            "E": 78
+          }
+        }
+      }
+    },
+    "58": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 72,
+            "C": 10,
+            "D": 10,
+            "E": 4
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 0,
+            "B": 90,
+            "C": 1,
+            "D": 5,
+            "E": 3
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 9,
+            "B": 45,
+            "C": 23,
+            "D": 18,
+            "E": 7
+          }
+        }
+      }
+    },
+    "59": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 16,
+            "B": 19,
+            "C": 55,
+            "D": 68,
+            "E": 27
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 8,
+            "C": 69,
+            "D": 85,
+            "E": 23
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 26,
+            "B": 35,
+            "C": 42,
+            "D": 46,
+            "E": 28
+          }
+        }
+      }
+    },
+    "60": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 40,
+            "C": 48,
+            "D": 36,
+            "E": 49
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 8,
+            "B": 21,
+            "C": 66,
+            "D": 35,
+            "E": 59
+          }
+        },
+        "low": {
+          "unanswered": 1,
+          "options": {
+            "A": 21,
+            "B": 53,
+            "C": 38,
+            "D": 35,
+            "E": 37
+          }
+        }
+      }
+    },
+    "61": {
+      "groups": {
+        "all": {
+          "unanswered": 1,
+          "options": {
+            "A": 42,
+            "B": 33,
+            "C": 38,
+            "D": 52,
+            "E": 26
+          }
+        },
+        "high": {
+          "unanswered": 1,
+          "options": {
+            "A": 66,
+            "B": 16,
+            "C": 21,
+            "D": 70,
+            "E": 16
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 30,
+            "B": 44,
+            "C": 48,
+            "D": 40,
+            "E": 31
+          }
+        }
+      }
+    },
+    "62": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 32,
+            "B": 26,
+            "C": 16,
+            "D": 15,
+            "E": 11
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 56,
+            "B": 26,
+            "C": 5,
+            "D": 6,
+            "E": 7
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 13,
+            "B": 26,
+            "C": 28,
+            "D": 21,
+            "E": 14
+          }
+        }
+      }
+    },
+    "63": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 34,
+            "B": 15,
+            "C": 9,
+            "D": 5,
+            "E": 37
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 25,
+            "B": 1,
+            "C": 3,
+            "D": 1,
+            "E": 69
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 34,
+            "B": 33,
+            "C": 16,
+            "D": 9,
+            "E": 8
+          }
+        }
+      }
+    },
+    "64": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 18,
+            "B": 62,
+            "C": 10,
+            "D": 5,
+            "E": 5
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 2,
+            "B": 92,
+            "C": 3,
+            "D": 2,
+            "E": 2
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 35,
+            "B": 30,
+            "C": 17,
+            "D": 10,
+            "E": 8
+          }
+        }
+      }
+    },
+    "65": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 46,
+            "B": 22,
+            "C": 8,
+            "D": 16,
+            "E": 8
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 65,
+            "B": 13,
+            "C": 3,
+            "D": 14,
+            "E": 4
+          }
+        },
+        "low": {
+          "unanswered": 0,
+          "options": {
+            "A": 25,
+            "B": 29,
+            "C": 17,
+            "D": 17,
+            "E": 11
+          }
+        }
+      }
+    },
+    "66": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 4,
+            "B": 15,
+            "C": 44,
+            "D": 26,
+            "E": 13
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 1,
+            "B": 10,
+            "C": 55,
+            "D": 20,
+            "E": 15
+          }
+        },
+        "low": {
+          "unanswered": 1,
+          "options": {
+            "A": 8,
+            "B": 20,
+            "C": 33,
+            "D": 30,
+            "E": 11
+          }
+        }
+      }
+    },
+    "67": {
+      "groups": {
+        "all": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 37,
+            "C": 13,
+            "D": 9,
+            "E": 27
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 15,
+            "B": 60,
+            "C": 2,
+            "D": 2,
+            "E": 20
+          }
+        },
+        "low": {
+          "unanswered": 1,
+          "options": {
+            "A": 13,
+            "B": 19,
+            "C": 25,
+            "D": 18,
+            "E": 27
+          }
+        }
+      }
+    },
+    "68": {
+      "groups": {
+        "all": {
+          "unanswered": 1,
+          "options": {
+            "A": 49,
+            "B": 48,
+            "C": 42,
+            "D": 49,
+            "E": 6
+          }
+        },
+        "high": {
+          "unanswered": 0,
+          "options": {
+            "A": 70,
+            "B": 27,
+            "C": 27,
+            "D": 71,
+            "E": 2
+          }
+        },
+        "low": {
+          "unanswered": 1,
+          "options": {
+            "A": 34,
+            "B": 59,
+            "C": 48,
+            "D": 33,
+            "E": 13
+          }
+        }
+      }
+    }
+  }
+}

@@ -66,7 +66,56 @@ function parse115OptionStats() {
   return stats;
 }
 
-const optionStats = parse115OptionStats();
+function parseHistoricalOptionStats() {
+  const stats = {};
+  const years = [
+    91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101,
+    102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114
+  ];
+  for (const year of years) {
+    const source = JSON.parse(fs.readFileSync(
+      path.join(root, "sources", "official", String(year), `${year}-option-analysis.json`),
+      "utf8"
+    ));
+    for (const [questionNo, record] of Object.entries(source.questions)) {
+      const question = questions.get(`學-${year}-${questionNo}`);
+      if (!question || question.written) {
+        throw new Error(`${year} 年第 ${questionNo} 題找不到對應選擇題`);
+      }
+      const optionKeys = Object.keys(question.options);
+      const missingOptions = new Set();
+      const groups = Object.fromEntries(
+        ["all", "high", "low"].map(groupName => {
+          const group = record.groups[groupName];
+          const options = Object.fromEntries(optionKeys.flatMap(key => {
+            if (!Number.isFinite(group.options[key])) {
+              missingOptions.add(key);
+              return [];
+            }
+            return [[key, group.options[key]]];
+          }));
+          return [groupName, { unanswered: group.unanswered, options }];
+        })
+      );
+      stats[question.id] = {
+        metric: "selectionRate",
+        unit: "percent",
+        groups,
+        ...(missingOptions.size ? {
+          completeness: "partial",
+          missingOptions: [...missingOptions]
+        } : {}),
+        source: {
+          label: `大考中心 ${year} 學年度自然科選擇題選項分析`,
+          localFile: source.sourceFile
+        }
+      };
+    }
+  }
+  return stats;
+}
+
+const optionStats = { ...parseHistoricalOptionStats(), ...parse115OptionStats() };
 const output = `window.LEARNING_DATA = window.LEARNING_DATA || {};\n` +
   `window.LEARNING_DATA.optionStats = ${JSON.stringify(optionStats, null, 2)};\n` +
   `window.LEARNING_DATA.explanations = window.LEARNING_DATA.explanations || {};\n`;

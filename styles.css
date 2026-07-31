@@ -168,11 +168,13 @@ textarea { min-height: 140px; resize: vertical; line-height: 1.65; }
 .stats-tabs button:last-child { border-right: 0; }
 .stats-tabs button.active { color: #fff; background: #334f99; }
 .option-rate-rows { display: grid; gap: 8px; margin: 13px 0 9px; }
-.option-rate-row { display: grid; grid-template-columns: 72px minmax(80px, 1fr) 44px; align-items: center; gap: 8px; }
+.option-rate-row { display: grid; grid-template-columns: 96px minmax(80px, 1fr) 44px; align-items: center; gap: 8px; }
 .option-rate-row b { text-align: right; }
 .option-rate-track { height: 10px; overflow: hidden; border-radius: 999px; background: #d4ddec; }
 .option-rate-track i { display: block; height: 100%; background: #334f99; }
 .option-rate-track i.correct-rate { background: #39805d; }
+.option-rate-missing { color: var(--muted); }
+.option-rate-missing > span:nth-child(2) { font-size: .82rem; }
 .question-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
 
 .source-panel { border-top: 1px solid var(--line); background: #edf4f2; }

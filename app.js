@@ -240,26 +240,41 @@
   }
 
   function optionStatsHtml(q, activeGroup = "all") {
-    if (!q.optionStats?.groups) return "";
+    if (q.written) return "";
+    if (!q.optionStats?.groups) {
+      return `<section class="option-stats option-stats-unavailable">
+        <strong>官方選項畫記率</strong>
+        <p>大考中心此學年度未公布逐選項畫記率，本站維持空白，不自行推估。</p>
+      </section>`;
+    }
     const groupLabels = { all:"全體", low:"低分組", high:"高分組" };
     const group = q.optionStats.groups[activeGroup] || q.optionStats.groups.all;
     const correct = new Set(answerKeys(q.answer));
-    const rows = Object.entries(group.options).map(([key, rate]) => `
+    const rows = Object.keys(q.options).map(key => {
+      const rate = group.options[key];
+      if (!Number.isFinite(rate)) {
+        return `<div class="option-rate-row option-rate-missing">
+          <span>(${key})${correct.has(key) ? " ✓正解" : ""}</span>
+          <span>官方表未列此格</span><b>—</b>
+        </div>`;
+      }
+      return `
       <div class="option-rate-row">
         <span>(${key})${correct.has(key) ? " ✓正解" : ""}</span>
         <span class="option-rate-track"><i class="${correct.has(key) ? "correct-rate" : ""}" style="width:${Math.min(rate, 100)}%"></i></span>
         <b>${rate}%</b>
-      </div>`).join("");
+      </div>`;
+    }).join("");
     return `
       <section class="option-stats" data-question="${escapeHtml(q.id)}">
         <div class="option-stats-head">
-          <strong>全體考生選項畫記率（大考中心官方統計）</strong>
+          <strong>${groupLabels[activeGroup]}選項畫記率（大考中心官方統計）</strong>
           <span class="stats-tabs">${Object.entries(groupLabels).map(([key, label]) =>
             `<button type="button" class="${key === activeGroup ? "active" : ""}" data-stats-group="${key}">${label}</button>`
           ).join("")}</span>
         </div>
         <div class="option-rate-rows">${rows}</div>
-        <small>未答 ${group.unanswered}%${q.multi ? "；多選題為各選項畫記率，合計不一定是 100%。" : "；合計可能因四捨五入略有差異。"}</small>
+        <small>未答 ${group.unanswered}%${q.multi ? "；多選題為各選項畫記率，合計不一定是 100%。" : "；合計可能因四捨五入略有差異。"}${q.optionStats.completeness === "partial" ? " 官方原表有未列數值，本頁維持缺漏，不自行反推。" : ""}</small>
       </section>`;
   }
 
@@ -275,6 +290,11 @@
     const optionAnalysis = Object.entries(explanation.optionAnalysis || {}).map(([key, note]) =>
       `<li class="${note.verdict === "correct" ? "correct-note" : ""}"><b>${key}</b>：${escapeHtml(note.reason)}</li>`
     ).join("");
+    const answerGuidance = q.written
+      ? `<h3>拿分要點</h3>
+        <ul class="option-analysis">${(explanation.scoringPoints || []).map(point => `<li>${escapeHtml(point)}</li>`).join("")}</ul>`
+      : `<h3>每個選項怎麼看</h3>
+        <ul class="option-analysis">${optionAnalysis}</ul>`;
     return `
       <section class="teacher-explanation">
         <p class="encouragement">${escapeHtml(explanation.encouragement)}</p>
@@ -282,8 +302,7 @@
         <p>${escapeHtml(explanation.keyIdea)}</p>
         <h3>一步一步想</h3>
         <ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
-        <h3>每個選項怎麼看</h3>
-        <ul class="option-analysis">${optionAnalysis}</ul>
+        ${answerGuidance}
         <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
       </section>`;
   }
