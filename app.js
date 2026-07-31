@@ -1,3 +1,5 @@
+import { bindReportForm, reportFormHtml } from "./report-client.js";
+
 (() => {
   "use strict";
 
@@ -11,9 +13,11 @@
   const enrichQuestion = (question, bank) => ({
     ...question,
     year: bank.year,
+    era: bank.era || "學測",
     officialUrl: bank.official?.test || "",
     explanation: learningData.explanations?.[question.id] || null,
-    optionStats: learningData.optionStats?.[question.id] || null
+    optionStats: learningData.optionStats?.[question.id] || null,
+    discrimination: learningData.discrimination?.[question.id] || null
   });
   const newestBank = banks[0];
   const allQuestions = banks.flatMap(bank => bank.questions.map(q => enrichQuestion(q, bank)));
@@ -149,17 +153,29 @@
     return true;
   }
 
+  function inDiscrimination(q, value) {
+    if (value === "all") return true;
+    const discrimination = q.discrimination?.value;
+    if (!Number.isFinite(discrimination)) return value === "missing";
+    if (value === "high") return discrimination >= .4;
+    if (value === "mid") return discrimination >= .2 && discrimination < .4;
+    if (value === "low") return discrimination < .2;
+    return true;
+  }
+
   function filteredPool() {
     const subjects = selectedSubjects();
     const type = $("typeFilter").value;
     const difficulty = $("difficultyFilter").value;
+    const discrimination = $("discriminationFilter").value;
     const tags = selectedTags();
     return questionsForSelectedYear().filter(q =>
       subjects.includes(q.cat) &&
       (type === "all" || (type === "single" && !q.multi && !q.written) ||
         (type === "multi" && q.multi) || (type === "written" && q.written)) &&
       (!tags || q.tags.some(tag => tags.has(tag))) &&
-      inDifficulty(q, difficulty)
+      inDifficulty(q, difficulty) &&
+      inDiscrimination(q, discrimination)
     );
   }
 
@@ -199,8 +215,9 @@
     const typeText = $("typeFilter").selectedOptions[0]?.textContent || "全部題型";
     const tagText = $("mainTagSummary").textContent;
     const difficultyText = $("difficultyFilter").selectedOptions[0]?.textContent || "不限難度";
+    const discriminationText = $("discriminationFilter").selectedOptions[0]?.textContent || "不限鑑別度";
     const orderText = $("orderFilter").value === "random" ? "隨機出題" : "原卷順序";
-    $("filterSummary").textContent = `${yearText}・${subjectText}・${typeText}・${tagText}・${difficultyText}・抽 ${$("questionCount").value || 10} 題・${orderText}（符合 ${total} 題）`;
+    $("filterSummary").textContent = `${yearText}・${subjectText}・${typeText}・${tagText}・${difficultyText}・${discriminationText}・抽 ${$("questionCount").value || 10} 題・${orderText}（符合 ${total} 題）`;
   }
 
   function initFilters() {
@@ -215,7 +232,7 @@
       ${tags.map(tag => `<label><input class="main-tag-checkbox" type="checkbox" value="${escapeHtml(tag)}"> ${escapeHtml(tag)}</label>`).join("")}`;
     updateMainTagSummary();
 
-    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("orderFilter")]
+    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("discriminationFilter"), $("orderFilter")]
       .forEach(input => input.addEventListener("change", updatePoolCount));
     $("mainYearOptions").addEventListener("change", handleMainYearChange);
     $("mainTagOptions").addEventListener("change", handleMainTagChange);
@@ -236,10 +253,53 @@
     $("statsTotal").textContent = questions.filter(q => q.pass != null).length;
   }
 
+  function reportExplanation(q) {
+    const details = q.explanation || {};
+    return [
+      q.written ? q.referenceAnswer : "",
+      details.keyIdea,
+      ...(details.steps || []),
+      ...Object.entries(details.optionAnalysis || {}).map(([key, item]) => `(${key}) ${item.reason}`),
+      ...(details.scoringPoints || []),
+    ].filter(Boolean).join("\n");
+  }
+
+  function reportContext(q, card) {
+    const selected = q.written
+      ? ""
+      : [...card.querySelectorAll(".option input:checked")].map(input => input.value).sort().join("、");
+    const figures = window.ScienceQuestionUI.questionFigures(q)
+      .map(figure => typeof figure === "string" ? figure : figure.src)
+      .filter(Boolean)
+      .map(src => new URL(src, window.location.href).href)
+      .join("\n");
+    return {
+      questionId: q.id,
+      year: q.year,
+      era: q.era,
+      no: q.no,
+      subject: q.subject,
+      tags: (q.tags || []).join("、"),
+      type: q.written ? "非選擇題" : q.multi ? "多選題" : "單選題",
+      stem: q.stem,
+      passage: q.passage || "",
+      options: Object.entries(q.options || {}).map(([key, value]) => `(${key}) ${value}`).join("\n"),
+      answer: q.written ? q.referenceAnswer || "請見官方評分原則" : q.answer,
+      picked: selected,
+      explanation: reportExplanation(q),
+      figures,
+      url: window.location.href,
+      device: navigator.userAgent,
+    };
+  }
+
   function questionCard(q, position) {
     const card = document.createElement("article");
     card.className = "card question-card";
     const passText = q.pass == null ? "" : `<span class="pass-line">官方答對率 ${(q.pass * 100).toFixed(0)}%</span>`;
+    const discriminationText = Number.isFinite(q.discrimination?.value)
+      ? `<span class="pass-line">官方鑑別度 ${q.discrimination.value.toFixed(2)}</span>`
+      : "";
     const passage = q.passage ? `<div class="passage">${window.ScienceQuestionUI.richText(q.passage)}</div>` : "";
     const tags = q.tags.map(tag => `<span class="pill pill-blue">${escapeHtml(tag)}</span>`).join("");
     const figures = window.ScienceQuestionUI.figuresHtml(q);
@@ -248,8 +308,8 @@
     if (q.written) {
       answerArea = `
         <div class="written-box">
-          <label for="writtenAnswer"><strong>你的作答</strong></label>
-          <textarea id="writtenAnswer" placeholder="請寫下計算過程、推論理由或完整答案。內容只保存在這個瀏覽器。"></textarea>
+          <label for="writtenAnswer-${position}"><strong>你的作答</strong></label>
+          <textarea id="writtenAnswer-${position}" placeholder="請寫下計算過程、推論理由或完整答案。內容只保存在這個瀏覽器。"></textarea>
         </div>`;
     } else {
       const type = q.multi ? "checkbox" : "radio";
@@ -271,6 +331,7 @@
           ${q.multi ? '<span class="pill pill-gold">多選</span>' : ""}
           ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
           ${passText}
+          ${discriminationText}
           <span class="question-no">${q.year} 年第 ${q.no} 題</span>
         </div>
         ${passage}
@@ -278,12 +339,7 @@
         ${figures}
         ${answerArea}
         <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
-        <div class="question-actions">
-          ${q.written || q.multi ? `<button class="btn btn-primary" id="submitAnswer">${q.written ? "顯示官方評分要點" : "送出答案"}</button>` : ""}
-          ${position > 0 ? '<button class="btn btn-secondary" id="prevQuestion">上一題</button>' : ""}
-          <button class="btn btn-secondary" id="nextQuestion" hidden>${position === session.questions.length - 1 ? "查看結果" : "下一題"}</button>
-          <button class="btn btn-secondary" id="backToFilters">結束本次練習</button>
-        </div>
+        ${reportFormHtml()}
       </div>
       ${window.ScienceQuestionUI.officialSourceHtml(q)}`;
 
@@ -291,17 +347,10 @@
       input.addEventListener("change", () => {
         if (!q.multi) card.querySelectorAll(".option").forEach(option => option.classList.remove("selected"));
         input.closest(".option").classList.toggle("selected", input.checked);
-        if (!q.multi && input.checked) submitAnswer(card, q);
       });
     });
 
-    card.querySelector("#submitAnswer")?.addEventListener("click", () => submitAnswer(card, q));
-    card.querySelector("#nextQuestion").addEventListener("click", nextQuestion);
-    card.querySelector("#prevQuestion")?.addEventListener("click", () => {
-      session.index -= 1;
-      renderCurrent();
-    });
-    card.querySelector("#backToFilters").addEventListener("click", endEarly);
+    bindReportForm(card, () => reportContext(q, card), window.location);
     return card;
   }
 
@@ -390,10 +439,8 @@
     })[char]);
   }
 
-  function submitAnswer(card, q) {
+  function submitAnswer(card, q, position) {
     const feedback = card.querySelector("#feedback");
-    const submit = card.querySelector("#submitAnswer");
-    const next = card.querySelector("#nextQuestion");
     let result;
 
     if (q.written) {
@@ -403,20 +450,13 @@
       result = { id:q.id, no:q.no, written:true, response, correct:null };
     } else {
       const selected = [...card.querySelectorAll(".option input:checked")].map(input => input.value).sort();
-      if (!selected.length && !q.fullCredit) {
-        feedback.className = "feedback show bad";
-        feedback.textContent = "請先選擇答案。";
-        return;
-      }
       if (q.fullCredit) {
         card.querySelectorAll(".option input").forEach(input => { input.disabled = true; });
         feedback.className = "feedback show ok";
         feedback.innerHTML = "<strong>本題官方全體給分。</strong> 無論選擇或未作答，均依公告取得本題分數。" + explanationHtml(q);
         result = { id:q.id, no:q.no, written:false, selected, correct:true, fullCredit:true };
         updateWrongBook(q.id, true);
-        session.results[session.index] = result;
-        if (submit) submit.disabled = true;
-        next.hidden = false;
+        session.results[position] = result;
         saveHistory(result);
         updateReviewSchedule(q.id, true);
         refreshLearningCounts();
@@ -437,7 +477,7 @@
         .map(answer => answerKeys(answer).join("、")).join(" 或 ");
       const answerFeedback = isCorrect
         ? `<strong>答對了。</strong> 官方答案：${officialAnswers}`
-        : `<strong>這題再想一下。</strong> 你的答案：${selected.join("、")}；官方答案：${officialAnswers}`;
+        : `<strong>這題再想一下。</strong> 你的答案：${selected.join("、") || "未作答"}；官方答案：${officialAnswers}`;
       feedback.innerHTML = `${answerFeedback}${explanationHtml(q)}${optionStatsHtml(q)}`;
       setupStatsTabs(card, q);
       result = { id:q.id, no:q.no, written:false, selected, correct:isCorrect };
@@ -445,9 +485,7 @@
       updateReviewSchedule(q.id, isCorrect);
     }
 
-    session.results[session.index] = result;
-    if (submit) submit.disabled = true;
-    next.hidden = false;
+    session.results[position] = result;
     saveHistory(result);
     refreshLearningCounts();
   }
@@ -476,21 +514,25 @@
     storage.set("gsatZiranReview", schedule);
   }
 
-  function renderCurrent() {
-    const q = session.questions[session.index];
-    $("questionHost").replaceChildren(questionCard(q, session.index));
-    $("progressLabel").textContent = `${session.index + 1} / ${session.questions.length}`;
-    $("progressBar").style.width = `${((session.index + 1) / session.questions.length) * 100}%`;
+  function renderSession() {
+    $("questionHost").replaceChildren(
+      ...session.questions.map((question, position) => questionCard(question, position)),
+    );
+    $("progressLabel").textContent = `共 ${session.questions.length} 題`;
+    $("progressBar").style.width = "0%";
+    $("submitSessionBtn").disabled = false;
     window.scrollTo({ top:$("workspace").offsetTop - 12, behavior:"smooth" });
   }
 
-  function nextQuestion() {
-    if (session.index >= session.questions.length - 1) {
-      finishSession();
-      return;
-    }
-    session.index += 1;
-    renderCurrent();
+  function submitSession() {
+    session.questions.forEach((question, position) => {
+      const card = $("questionHost").children[position];
+      submitAnswer(card, question, position);
+    });
+    $("submitSessionBtn").disabled = true;
+    $("progressBar").style.width = "100%";
+    $("progressLabel").textContent = `已交卷 ${session.questions.length} 題`;
+    finishSession();
   }
 
   function startSession(mode = "filtered") {
@@ -519,7 +561,7 @@
     $("workspace").classList.add("active");
     $("workspace").setAttribute("aria-hidden", "false");
     startTimer();
-    renderCurrent();
+    renderSession();
   }
 
   function startQuickSession() {
@@ -530,6 +572,7 @@
     $("mainTagAll").checked = true;
     document.querySelectorAll(".main-tag-checkbox").forEach(input => { input.checked = false; });
     $("difficultyFilter").value = "all";
+    $("discriminationFilter").value = "all";
     $("questionCount").value = "10";
     $("orderFilter").value = "random";
     updateMainYearSummary();
@@ -551,7 +594,6 @@
 
   function finishSession() {
     clearInterval(session.timerId);
-    $("workspace").classList.remove("active");
     const choice = session.results.filter(result => result && !result.written);
     const correct = choice.filter(result => result.correct).length;
     const written = session.results.filter(result => result?.written).length;
@@ -563,17 +605,19 @@
   }
 
   function endEarly() {
-    if (session.results.some(Boolean)) finishSession();
-    else {
-      clearInterval(session.timerId);
-      $("workspace").classList.remove("active");
-      window.scrollTo({ top:$("controls").offsetTop - 12, behavior:"smooth" });
-    }
+    clearInterval(session.timerId);
+    $("workspace").classList.remove("active");
+    $("workspace").setAttribute("aria-hidden", "true");
+    $("summary").classList.remove("show");
+    $("questionHost").replaceChildren();
+    window.scrollTo({ top:$("controls").offsetTop - 12, behavior:"smooth" });
   }
 
   $("startBtn").addEventListener("click", () => startSession("filtered"));
   $("quickStartBtn").addEventListener("click", startQuickSession);
   $("fullExamBtn").addEventListener("click", () => startSession("full"));
+  $("submitSessionBtn").addEventListener("click", submitSession);
+  $("endSessionBtn").addEventListener("click", endEarly);
   $("restartBtn").addEventListener("click", () => {
     $("summary").classList.remove("show");
     $("controls").scrollIntoView({ behavior:"smooth" });
@@ -589,7 +633,7 @@
     $("workspace").classList.add("active");
     $("workspace").setAttribute("aria-hidden", "false");
     startTimer();
-    renderCurrent();
+    renderSession();
   }
 
   function showHistory() {
@@ -660,7 +704,7 @@
     updatePaperYearSummary();
     $("paperList").innerHTML = pool.map(q => `
       <label><input class="paper-question" type="checkbox" value="${escapeHtml(q.id)}" data-year="${q.year}">
-      <span>${q.year} 年第 ${q.no} 題・${escapeHtml(q.subject)}・${escapeHtml(q.tags.join("／"))}</span></label>`
+      <span>${q.year} 年第 ${q.no} 題・${escapeHtml(q.subject)}・${escapeHtml(q.tags.join("／"))}${Number.isFinite(q.discrimination?.value) ? `・鑑別度 ${q.discrimination.value.toFixed(2)}` : "・鑑別度未公布"}</span></label>`
     ).join("");
     $("paperList").querySelectorAll("input").forEach(input => input.addEventListener("change", updatePaperCount));
     updatePaperCount();
@@ -735,12 +779,14 @@
   $("paperYearApplyBtn").addEventListener("click", () => {
     const years = selectedPaperYears();
     const difficulty = $("paperDifficultyQuick").value;
+    const discrimination = $("paperDiscriminationQuick").value;
     document.querySelectorAll(".paper-question").forEach(input => {
       const question = allQuestions.find(q => q.id === input.value);
       input.checked =
         (!years || years.has(Number(input.dataset.year))) &&
         Boolean(question) &&
-        inDifficulty(question, difficulty);
+        inDifficulty(question, difficulty) &&
+        inDiscrimination(question, discrimination);
     });
     updatePaperCount();
   });
@@ -753,7 +799,7 @@
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("set", questions.map(q => q.id).join(","));
-    $("paperLinkOutput").textContent = url.toString();
+    $("paperLinkOutput").innerHTML = `測驗連結（已嘗試複製）：<a href="${escapeHtml(url.toString())}" target="_blank" rel="noopener">${escapeHtml(url.toString())}</a>`;
     try { await navigator.clipboard.writeText(url.toString()); }
     catch { /* 瀏覽器未開放剪貼簿時，仍顯示連結供手動複製。 */ }
   });

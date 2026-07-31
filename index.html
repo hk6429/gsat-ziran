@@ -11,7 +11,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="assets/vendor/katex/katex.min.css?v=20260731-1">
-  <link rel="stylesheet" href="styles.css?v=20260731-4">
+  <link rel="stylesheet" href="styles.css?v=20260731-5">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="學測自然題庫｜歷屆試題分類練習">
@@ -118,6 +118,17 @@
         </label>
 
         <label class="field">
+          <span>鑑別度（官方 D 值）</span>
+          <select id="discriminationFilter">
+            <option value="all">不限鑑別度</option>
+            <option value="high">良好（≥0.40）</option>
+            <option value="mid">尚可（0.20–0.39）</option>
+            <option value="low">偏低（＜0.20）</option>
+            <option value="missing">未公布</option>
+          </select>
+        </label>
+
+        <label class="field">
           <span>題數</span>
           <input id="questionCount" type="number" min="1" max="60" value="10" inputmode="numeric">
         </label>
@@ -183,6 +194,15 @@
             <option value="hard">較難（＜40%）</option>
           </select>
         </label>
+        <label class="paper-quick-field">鑑別度
+          <select id="paperDiscriminationQuick">
+            <option value="all">不限</option>
+            <option value="high">良好（≥0.40）</option>
+            <option value="mid">尚可（0.20–0.39）</option>
+            <option value="low">偏低（＜0.20）</option>
+            <option value="missing">未公布</option>
+          </select>
+        </label>
         <button class="btn btn-secondary" id="paperYearApplyBtn">套用（只勾符合的）</button>
       </div>
       <div class="paper-toolbar">
@@ -210,6 +230,10 @@
         <span class="timer" id="timer">00:00</span>
       </div>
       <div id="questionHost"></div>
+      <div class="card session-actions">
+        <button class="btn btn-primary" id="submitSessionBtn">送出全部答案</button>
+        <button class="btn btn-secondary" id="endSessionBtn">結束本次練習</button>
+      </div>
     </section>
 
     <section class="card summary-card" id="summary">
@@ -231,6 +255,7 @@
 
   <script src="data/bank.js?v=20260731-1"></script>
   <script src="data/learning.js?v=20260731-1"></script>
+  <script src="data/discrimination.js?v=20260731-1"></script>
   <script src="data/explanations-earth.js?v=20260731-1"></script>
   <script src="data/explanations-earth-batch2.js?v=20260731-2"></script>
   <script src="data/explanations-earth-batch3.js?v=20260731-2"></script>
@@ -308,6 +333,6 @@
   <script src="assets/vendor/katex/katex.min.js?v=20260731-1"></script>
   <script src="data/figures.js?v=20260731-1"></script>
   <script src="science-renderer.js?v=20260731-1"></script>
-  <script src="app.js?v=20260731-4"></script>
+  <script type="module" src="app.js?v=20260731-5"></script>
 </body>
 </html>

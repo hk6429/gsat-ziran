@@ -1,3 +1,5 @@
+import { bindReportForm, reportFormHtml } from "./report-client.js";
+
 (() => {
   "use strict";
   const banks = window.BANK || [];
@@ -74,6 +76,7 @@
     }
     const explanation = learningData.explanations?.[q.id] || null;
     const optionStats = learningData.optionStats?.[q.id] || null;
+    const discrimination = learningData.discrimination?.[q.id] || null;
     const answer = q.fullCredit
       ? "全體到考生均給分"
       : q.written
@@ -97,6 +100,7 @@
             ${q.multi ? '<span class="pill pill-gold">多選</span>' : ""}
             ${q.fullCredit ? '<span class="pill pill-gold">全體給分</span>' : ""}
             ${q.written ? '<span class="pill pill-gold">非選擇題</span>' : ""}
+            ${Number.isFinite(discrimination?.value) ? `<span class="pass-line">官方鑑別度 ${discrimination.value.toFixed(2)}</span>` : ""}
             <span class="question-no">${year} 年第 ${q.no} 題</span>
           </div>
           ${q.passage ? `<div class="passage">${window.ScienceQuestionUI.richText(q.passage)}</div>` : ""}
@@ -106,9 +110,38 @@
           <div class="feedback show info"><strong>${q.written ? "官方滿分參考答案與評分要點" : "官方答案"}</strong><br>${escapeHtml(answer)}
           ${teacherExplanationHtml(q, explanation)}${optionStatsHtml(q, optionStats)}</div>
           ${q.pass == null ? "" : `<p class="pass-line">大考中心選項分析：全體到考生答對率 ${(q.pass * 100).toFixed(0)}%</p>`}
+          ${reportFormHtml()}
         </div>
         ${window.ScienceQuestionUI.officialSourceHtml({ ...q, year, officialUrl:bank.official?.test || "" })}
       </article>`;
+    const card = result.querySelector(".question-card");
+    const details = explanation || {};
+    bindReportForm(card, () => ({
+      questionId: q.id,
+      year,
+      era: bank.era || "學測",
+      no: q.no,
+      subject: q.subject,
+      tags: (q.tags || []).join("、"),
+      type: q.written ? "非選擇題" : q.multi ? "多選題" : "單選題",
+      stem: q.stem,
+      passage: q.passage || "",
+      options: Object.entries(q.options || {}).map(([key, value]) => `(${key}) ${value}`).join("\n"),
+      answer,
+      explanation: [
+        details.keyIdea,
+        ...(details.steps || []),
+        ...Object.entries(details.optionAnalysis || {}).map(([key, item]) => `(${key}) ${item.reason}`),
+        ...(details.scoringPoints || []),
+      ].filter(Boolean).join("\n"),
+      figures: window.ScienceQuestionUI.questionFigures({ ...q, year })
+        .map(figure => typeof figure === "string" ? figure : figure.src)
+        .filter(Boolean)
+        .map(src => new URL(src, window.location.href).href)
+        .join("\n"),
+      url: window.location.href,
+      device: navigator.userAgent,
+    }), window.location);
     history.replaceState(null, "", `?q=${year}-${no}`);
   }
 

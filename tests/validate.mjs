@@ -380,7 +380,7 @@ check(n83q10?.answer === "A" && Object.keys(n83q10?.options || {}).join("") === 
 const n83q53 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 53);
 check(n83q53?.answer === "D" && /第 53–57 題為綜合型題組/.test(n83q53?.passage || ""), "83 年第 53 題必須保留河口綜合題組情境");
 
-for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", ...explanationFiles.map(file => `data/${file}`)]) {
+for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", "data/discrimination.js", ...explanationFiles.map(file => `data/${file}`)]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
 }
 
@@ -408,7 +408,7 @@ check(/教師答案與解析/.test(appJs) && /URLSearchParams/.test(appJs), "教
 check(/science-renderer\.js/.test(indexHtml) && /katex\.min\.js/.test(indexHtml), "首頁缺少自然科 LaTeX／KaTeX 渲染器");
 check(/science-renderer\.js/.test(checkHtml) && /katex\.min\.js/.test(checkHtml), "查題頁缺少自然科 LaTeX／KaTeX 渲染器");
 check(/data\/figures\.js/.test(indexHtml) && /data\/figures\.js/.test(checkHtml), "首頁與查題頁缺少 figure-only 題圖對照");
-check(/if \(!q\.multi && input\.checked\) submitAnswer\(card, q\)/.test(appJs), "單選題必須點選後立即送出");
+check(/function renderSession\(\)/.test(appJs) && /id="submitSessionBtn"/.test(indexHtml), "多題練習必須同頁呈現並集中交卷");
 check(!/source-pages/.test(appJs) && !/source-pages/.test(checkJs), "不得再以整頁試卷截圖充當題圖");
 check(/data\/learning\.js/.test(indexHtml) && /data\/learning\.js/.test(checkHtml), "首頁與查題頁都必須載入教師解析與官方選項統計");
 

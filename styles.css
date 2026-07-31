@@ -163,6 +163,8 @@ button { min-height: 44px; }
 .workspace { display: none; margin-top: 18px; }
 .workspace.active { display: block; }
 .workspace-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; margin-bottom: 12px; }
+#questionHost { display: grid; gap: 18px; }
+.session-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; padding: 18px; }
 .progress-track { flex: 1; height: 9px; overflow: hidden; background: #dce8e4; border-radius: 999px; }
 .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--brand), #3e9d87); transition: width .2s ease; }
 .progress-label, .timer { white-space: nowrap; color: var(--muted); font-size: .86rem; font-weight: 700; }
@@ -226,6 +228,28 @@ textarea { min-height: 140px; resize: vertical; line-height: 1.65; }
 .option-rate-missing > span:nth-child(2) { font-size: .82rem; }
 .question-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
 
+.report-box { padding-top: 12px; margin-top: 14px; border-top: 1px dashed var(--line); }
+.report-toggle {
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.report-form { padding: 12px; margin-top: 8px; background: #f8f9fd; border: 1px solid var(--line); border-radius: 8px; }
+.report-form fieldset { padding: 0; margin: 0 0 10px; border: 0; }
+.report-form legend { margin-bottom: 6px; color: var(--ink); font-size: .88rem; font-weight: 700; }
+.report-reasons { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.report-reasons label { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--ink); font-weight: 500; }
+.report-reasons input { width: 18px; min-height: 18px; accent-color: var(--brand); }
+.report-note { width: 100%; min-height: 70px; resize: vertical; }
+.report-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
+.report-status { color: var(--brand-dark); font-size: .85rem; font-weight: 700; }
+.report-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
 .official-source-link { padding: 13px 22px; border-top: 1px solid var(--line); background: #edf4f2; color: var(--brand-dark); font-weight: 800; }
 .official-source-link p { margin: 0 0 7px; color: var(--muted); font-size: .86rem; font-weight: 600; }
 
@@ -279,7 +303,7 @@ footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;
 }
 
 @media print {
-  .hero, .control-card, .workspace-head, .question-actions, .source-panel summary, footer { display: none !important; }
+  .hero, .control-card, .workspace-head, .question-actions, .session-actions, .report-box, .source-panel summary, footer { display: none !important; }
   body, .shell { background: #fff; margin: 0; width: 100%; }
   .workspace, .question-card { display: block; box-shadow: none; border: 0; }
   .source-panel { display: block; background: #fff; }
