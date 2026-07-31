@@ -388,6 +388,7 @@ const indexHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const checkHtml = fs.readFileSync(path.join(root, "check.html"), "utf8");
 const checkJs = fs.readFileSync(path.join(root, "check.js"), "utf8");
 check(/id="mainYearOptions"/.test(indexHtml) && /id="mainYearSummary"/.test(indexHtml), "首頁缺少年度複選器");
+check(/id="mainTagOptions"/.test(indexHtml) && /id="mainTagSummary"/.test(indexHtml), "首頁缺少主題複選器");
 check(/data\/bank\.js/.test(indexHtml) && /data\/bank\.js/.test(checkHtml), "首頁與查題頁必須載入多年份 bank.js");
 check(/\\d\{2,3\}/.test(checkJs), "查題頁必須支援二至三位數學年度");
 check(/lookupCoverage/.test(checkHtml) && /Math\.min\(\.\.\.years\)/.test(checkJs), "查題頁收錄範圍必須由題庫年份動態產生");
@@ -399,6 +400,8 @@ check(/id="reviewBtn"/.test(indexHtml) && /id="wrongBookBtn"/.test(indexHtml) &&
 check(/id="paperModeBtn"/.test(indexHtml) && /id="paperPanel"/.test(indexHtml), "首頁必須提供教師出卷模式");
 check(/id="paperYearQuickOptions"/.test(indexHtml) && /id="paperYearApplyBtn"/.test(indexHtml), "教師出卷必須提供年度複選");
 check(/function selectedPaperYears\(\)/.test(appJs) && /years\.has\(Number\(input\.dataset\.year\)\)/.test(appJs), "教師出卷年度複選邏輯不完整");
+check(/function selectedTags\(\)/.test(appJs) && /q\.tags\.some\(tag => tags\.has\(tag\)\)/.test(appJs), "主題複選聯集邏輯不完整");
+check(/function handleMainTagChange\(event\)/.test(appJs) && /mainTagAll/.test(appJs), "主題複選全選邏輯不完整");
 check(/id="quickStartBtn"/.test(indexHtml) && /function startQuickSession\(\)/.test(appJs), "首頁缺少國文站同型的快速開始入口");
 check(/id="paperDifficultyQuick"/.test(indexHtml) && /id="paperLinkBtn"/.test(indexHtml) && /id="paperPageSize"/.test(indexHtml), "教師出卷缺少難度、測驗連結或紙張尺寸控制");
 check(/教師答案與解析/.test(appJs) && /URLSearchParams/.test(appJs), "教師卷解析或線上測驗連結流程不完整");

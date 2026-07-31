@@ -83,6 +83,13 @@
     return years ? allQuestions.filter(q => years.has(q.year)) : allQuestions;
   }
 
+  function selectedTags() {
+    if ($("mainTagAll").checked) return null;
+    return new Set(
+      [...document.querySelectorAll(".main-tag-checkbox:checked")].map(input => input.value)
+    );
+  }
+
   function updateMainYearSummary() {
     const years = [...document.querySelectorAll(".main-year-checkbox:checked")]
       .map(input => Number(input.value))
@@ -109,6 +116,30 @@
     updatePoolCount();
   }
 
+  function updateMainTagSummary() {
+    const tags = [...document.querySelectorAll(".main-tag-checkbox:checked")]
+      .map(input => input.value);
+    $("mainTagSummary").textContent =
+      $("mainTagAll").checked || !tags.length
+        ? "全部主題"
+        : tags.length <= 3
+          ? tags.join("、")
+          : `${tags.slice(0, 2).join("、")}等 ${tags.length} 個主題`;
+  }
+
+  function handleMainTagChange(event) {
+    const all = $("mainTagAll");
+    const tags = [...document.querySelectorAll(".main-tag-checkbox")];
+    if (event.target === all && all.checked) {
+      tags.forEach(input => { input.checked = false; });
+    } else if (event.target.classList.contains("main-tag-checkbox") && event.target.checked) {
+      all.checked = false;
+    }
+    if (!all.checked && !tags.some(input => input.checked)) all.checked = true;
+    updateMainTagSummary();
+    updatePoolCount();
+  }
+
   function inDifficulty(q, value) {
     if (value === "all") return true;
     if (q.pass == null) return false;
@@ -122,12 +153,12 @@
     const subjects = selectedSubjects();
     const type = $("typeFilter").value;
     const difficulty = $("difficultyFilter").value;
-    const tag = $("tagFilter").value;
+    const tags = selectedTags();
     return questionsForSelectedYear().filter(q =>
       subjects.includes(q.cat) &&
       (type === "all" || (type === "single" && !q.multi && !q.written) ||
         (type === "multi" && q.multi) || (type === "written" && q.written)) &&
-      (tag === "all" || q.tags.includes(tag)) &&
+      (!tags || q.tags.some(tag => tags.has(tag))) &&
       inDifficulty(q, difficulty)
     );
   }
@@ -166,7 +197,7 @@
       ? "全科"
       : subjects.map(subject => subjectNames[subject]).join("、") || "未選科目";
     const typeText = $("typeFilter").selectedOptions[0]?.textContent || "全部題型";
-    const tagText = $("tagFilter").value === "all" ? "全部主題" : $("tagFilter").value;
+    const tagText = $("mainTagSummary").textContent;
     const difficultyText = $("difficultyFilter").selectedOptions[0]?.textContent || "不限難度";
     const orderText = $("orderFilter").value === "random" ? "隨機出題" : "原卷順序";
     $("filterSummary").textContent = `${yearText}・${subjectText}・${typeText}・${tagText}・${difficultyText}・抽 ${$("questionCount").value || 10} 題・${orderText}（符合 ${total} 題）`;
@@ -179,12 +210,15 @@
     updateMainYearSummary();
 
     const tags = [...new Set(allQuestions.flatMap(q => q.tags))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
-    $("tagFilter").innerHTML = '<option value="all">全部主題</option>' +
-      tags.map(tag => `<option value="${tag}">${tag}</option>`).join("");
+    $("mainTagOptions").innerHTML = `
+      <label class="paper-year-all"><input id="mainTagAll" type="checkbox" value="all" checked> 全部主題</label>
+      ${tags.map(tag => `<label><input class="main-tag-checkbox" type="checkbox" value="${escapeHtml(tag)}"> ${escapeHtml(tag)}</label>`).join("")}`;
+    updateMainTagSummary();
 
-    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("tagFilter"), $("orderFilter")]
+    [...document.querySelectorAll(".subject-filter"), $("typeFilter"), $("difficultyFilter"), $("orderFilter")]
       .forEach(input => input.addEventListener("change", updatePoolCount));
     $("mainYearOptions").addEventListener("change", handleMainYearChange);
+    $("mainTagOptions").addEventListener("change", handleMainTagChange);
     $("questionCount").addEventListener("input", () => updateFilterSummary());
     filterDetails.addEventListener("toggle", () => {
       $("filterToggleLabel").textContent = filterDetails.open ? "收合進階篩選" : "展開進階篩選";
@@ -493,11 +527,13 @@
     document.querySelectorAll(".main-year-checkbox").forEach(input => { input.checked = false; });
     document.querySelectorAll(".subject-filter").forEach(input => { input.checked = true; });
     $("typeFilter").value = "all";
-    $("tagFilter").value = "all";
+    $("mainTagAll").checked = true;
+    document.querySelectorAll(".main-tag-checkbox").forEach(input => { input.checked = false; });
     $("difficultyFilter").value = "all";
     $("questionCount").value = "10";
     $("orderFilter").value = "random";
     updateMainYearSummary();
+    updateMainTagSummary();
     updateStats();
     updatePoolCount();
     startSession("filtered");
