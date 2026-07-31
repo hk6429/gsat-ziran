@@ -5,6 +5,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 global.window = {};
 await import(pathToFileURL(path.join(root, "data", "bank.js")));
+await import(pathToFileURL(path.join(root, "data", "learning.js")));
+for (const file of ["explanations-earth.js", "explanations-physics.js", "explanations-chemistry.js", "explanations-biology.js"]) {
+  await import(pathToFileURL(path.join(root, "data", file)));
+}
 const banks = [...(window.BANK || [])].sort((a, b) => b.year - a.year);
 
 const expected = {
@@ -45,6 +49,7 @@ const expected = {
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
 const allowedCats = new Set(["E", "P", "C", "B", "X"]);
+const questionById = new Map(banks.flatMap(bank => bank.questions.map(question => [question.id, question])));
 
 function answersFromOfficialText(year) {
   const filename = path.join(root, "sources", "official", String(year), `${year}-natural-answers.txt`);
@@ -164,6 +169,34 @@ for (const bank of banks) {
 }
 
 check(new Set(allIds).size === allIds.length, "跨年份題目 ID 不可重複");
+const explanations = window.LEARNING_DATA?.explanations || {};
+const optionStats = window.LEARNING_DATA?.optionStats || {};
+check(Object.keys(explanations).length === 40, "第一批教師覆核解析必須為四科各 10 題，共 40 題");
+check(Object.keys(optionStats).length === 48, "115 年選擇題官方選項統計必須完整匯入 48 題");
+for (const [id, explanation] of Object.entries(explanations)) {
+  const q = questionById.get(id);
+  check(Boolean(q), `${id} 解析找不到原題`);
+  if (!q) continue;
+  check(explanation.reviewStatus === "approved", `${id} 未經教師覆核的解析不得公開`);
+  check(["earth", "physics", "chemistry", "biology"].includes(explanation.reviewerRole), `${id} 缺科任教師角色`);
+  check(Boolean(explanation.encouragement && explanation.keyIdea && explanation.takeaway), `${id} 解析缺正向開場、核心概念或帶走句`);
+  check(Array.isArray(explanation.steps) && explanation.steps.length >= 2 && explanation.steps.length <= 5, `${id} 解析步驟必須為 2–5 步`);
+  check(Object.keys(explanation.optionAnalysis || {}).join("") === Object.keys(q.options || {}).join(""), `${id} 選項解析未完整對應原題`);
+  const markedCorrect = Object.entries(explanation.optionAnalysis || {})
+    .filter(([, note]) => note.verdict === "correct")
+    .map(([key]) => key)
+    .join("");
+  check(markedCorrect === q.answer, `${id} 解析的正確選項與官方答案不一致`);
+}
+for (const [id, stats] of Object.entries(optionStats)) {
+  const q = questionById.get(id);
+  check(Boolean(q) && id.startsWith("學-115-"), `${id} 選項統計沒有對應 115 年原題`);
+  if (!q) continue;
+  for (const group of ["all", "high", "low"]) {
+    check(Object.keys(stats.groups?.[group]?.options || {}).join("") === Object.keys(q.options).join(""), `${id} ${group} 組選項統計欄位不完整`);
+    check(Number.isFinite(stats.groups?.[group]?.unanswered), `${id} ${group} 組未答率缺漏`);
+  }
+}
 const n96q27 = banks.find(bank => bank.year === 96)?.questions.find(q => q.no === 27);
 check(n96q27?.answer === "E" && n96q27?.alternateAnswers?.join(",") === "B", "96 年第 27 題必須保留官方 E 或 B 雙答案");
 const n95q4 = banks.find(bank => bank.year === 95)?.questions.find(q => q.no === 4);
@@ -233,7 +266,7 @@ check(n83q10?.answer === "A" && Object.keys(n83q10?.options || {}).join("") === 
 const n83q53 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 53);
 check(n83q53?.answer === "D" && /第 53–57 題為綜合型題組/.test(n83q53?.passage || ""), "83 年第 53 題必須保留河口綜合題組情境");
 
-for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js"]) {
+for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", "data/explanations-earth.js", "data/explanations-physics.js", "data/explanations-chemistry.js", "data/explanations-biology.js"]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
 }
 
@@ -248,6 +281,9 @@ const appJs = fs.readFileSync(path.join(root, "app.js"), "utf8");
 check(/q\.fullCredit/.test(appJs), "練習頁必須支援官方全體給分題");
 check(/match\(\/\[A-Z\]\//.test(appJs), "練習頁必須支援 A–Z 圖示選項答案");
 check(/q\.fullCredit/.test(checkJs), "查題頁必須支援官方全體給分題");
+check(/id="reviewBtn"/.test(indexHtml) && /id="wrongBookBtn"/.test(indexHtml) && /id="historyBtn"/.test(indexHtml), "首頁必須提供複習、錯題本與學習歷程");
+check(/id="paperModeBtn"/.test(indexHtml) && /id="paperPanel"/.test(indexHtml), "首頁必須提供教師出卷模式");
+check(/data\/learning\.js/.test(indexHtml) && /data\/learning\.js/.test(checkHtml), "首頁與查題頁都必須載入教師解析與官方選項統計");
 
 const publicText = ["index.html", "check.html", "about.html", "privacy.html", "README.md", "manifest.json", "robots.txt", "sitemap.xml"]
   .map(file => fs.readFileSync(path.join(root, file), "utf8")).join("\n");

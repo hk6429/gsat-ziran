@@ -46,11 +46,6 @@
       <p>每題保留官方原卷題面；難度採官方整題答對率，若只公布選項分析則僅採可直接確認的單選題數值，不拿多選題選項畫記率推估整題難度。</p>
     </section>
 
-    <section class="quick-start" aria-label="快速開始">
-      <button class="btn btn-primary" id="quickStartBtn">立即開始・隨機 10 題</button>
-      <p id="quickStartHint">不知道先練什麼？直接從全部年份、五大科目隨機抽題；想加強特定範圍，再展開下方篩選。</p>
-    </section>
-
     <section class="card control-card" id="controls">
       <div class="control-heading">
         <div>
@@ -132,8 +127,42 @@
       </details>
       <div class="actions">
         <button class="btn btn-primary" id="startBtn">開始練習</button>
-        <button class="btn btn-secondary" id="fullExamBtn">依所選年份做完整試卷</button>
+        <button class="btn btn-primary review-button" id="reviewBtn">📅 今日該複習 <span id="reviewCount">0</span> 題</button>
+        <button class="btn btn-secondary" id="wrongBookBtn">錯題本（<span id="wrongCount">0</span>）</button>
+        <button class="btn btn-secondary" id="historyBtn">學習歷程</button>
+        <button class="btn btn-link" id="moreBtn" aria-expanded="false">更多功能⌃</button>
       </div>
+      <div class="more-actions" id="moreActions" hidden>
+        <button class="btn btn-secondary" id="fullExamBtn">整回模考（需先選年份）</button>
+        <button class="btn btn-secondary" id="paperModeBtn">出卷模式（老師）</button>
+      </div>
+    </section>
+
+    <section class="card history-panel" id="historyPanel" hidden>
+      <div class="panel-heading">
+        <h2 class="section-title">學習歷程</h2>
+        <button class="btn btn-link" id="closeHistoryBtn">關閉</button>
+      </div>
+      <div id="historyContent"></div>
+    </section>
+
+    <section class="card paper-panel" id="paperPanel" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2 class="section-title">出卷模式</h2>
+          <p class="section-note">套用上方篩選後勾選題目，可列印考卷或下載 Word 相容檔。答案與解析另列於教師卷。</p>
+        </div>
+        <button class="btn btn-link" id="closePaperBtn">關閉</button>
+      </div>
+      <p id="paperPoolSummary" class="filter-summary"></p>
+      <div class="paper-toolbar">
+        <button class="btn btn-secondary" id="paperSelectAllBtn">全選</button>
+        <button class="btn btn-secondary" id="paperSelectNoneBtn">全不選</button>
+        <button class="btn btn-primary" id="printPaperBtn">列印考卷</button>
+        <button class="btn btn-secondary" id="downloadWordBtn">下載 Word 檔</button>
+        <span id="paperSelectedCount">已選 0 題</span>
+      </div>
+      <div class="paper-list" id="paperList"></div>
     </section>
 
     <section class="workspace" id="workspace" aria-hidden="true">
@@ -162,7 +191,12 @@
     <div>題目、答案與統計資料以大考中心公告為準。本站為非營利學習整理，非大考中心官方網站。</div>
   </footer>
 
-  <script src="data/bank.js"></script>
-  <script src="app.js"></script>
+  <script src="data/bank.js?v=20260731-1"></script>
+  <script src="data/learning.js?v=20260731-1"></script>
+  <script src="data/explanations-earth.js?v=20260731-1"></script>
+  <script src="data/explanations-physics.js?v=20260731-1"></script>
+  <script src="data/explanations-chemistry.js?v=20260731-1"></script>
+  <script src="data/explanations-biology.js?v=20260731-1"></script>
+  <script src="app.js?v=20260731-1"></script>
 </body>
 </html>

@@ -7,8 +7,15 @@
     document.body.innerHTML = '<p class="notice" style="margin:30px">題庫載入失敗，請重新整理頁面。</p>';
     return;
   }
+  const learningData = window.LEARNING_DATA || {};
+  const enrichQuestion = (question, year) => ({
+    ...question,
+    year,
+    explanation: learningData.explanations?.[question.id] || null,
+    optionStats: learningData.optionStats?.[question.id] || null
+  });
   const newestBank = banks[0];
-  const allQuestions = banks.flatMap(bank => bank.questions.map(q => ({ ...q, year:bank.year })));
+  const allQuestions = banks.flatMap(bank => bank.questions.map(q => enrichQuestion(q, bank.year)));
 
   const storage = {
     get(key, fallback) {
@@ -44,6 +51,17 @@
 
   function answerKeys(answer) {
     return String(answer || "").match(/[A-Z]/g) || [];
+  }
+
+  function dueReviewQuestions() {
+    const schedule = storage.get("gsatZiranReview", {});
+    const now = Date.now();
+    return allQuestions.filter(q => schedule[q.id] && schedule[q.id].due <= now);
+  }
+
+  function refreshLearningCounts() {
+    $("wrongCount").textContent = storage.get("gsatZiranWrong", []).length;
+    $("reviewCount").textContent = dueReviewQuestions().length;
   }
 
   function selectedSubjects() {
@@ -105,7 +123,6 @@
     document.querySelector('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", `${yearRange} 學測自然共 ${questionCount} 題免費練，四科分類、混合題與非選擇題評分要點一次整理。`);
     $("coverageTitle").textContent = `涵蓋 ${yearRange} 學年度・${questionCount} 題`;
-    $("quickStartHint").textContent = `不知道先練什麼？直接從 ${banks.length} 個學年度、五大科目隨機抽題；想加強特定範圍，再展開下方篩選。`;
   }
 
   function updateFilterSummary(total = filteredPool().length) {
@@ -222,6 +239,65 @@
     return card;
   }
 
+  function optionStatsHtml(q, activeGroup = "all") {
+    if (!q.optionStats?.groups) return "";
+    const groupLabels = { all:"全體", low:"低分組", high:"高分組" };
+    const group = q.optionStats.groups[activeGroup] || q.optionStats.groups.all;
+    const correct = new Set(answerKeys(q.answer));
+    const rows = Object.entries(group.options).map(([key, rate]) => `
+      <div class="option-rate-row">
+        <span>(${key})${correct.has(key) ? " ✓正解" : ""}</span>
+        <span class="option-rate-track"><i class="${correct.has(key) ? "correct-rate" : ""}" style="width:${Math.min(rate, 100)}%"></i></span>
+        <b>${rate}%</b>
+      </div>`).join("");
+    return `
+      <section class="option-stats" data-question="${escapeHtml(q.id)}">
+        <div class="option-stats-head">
+          <strong>全體考生選項畫記率（大考中心官方統計）</strong>
+          <span class="stats-tabs">${Object.entries(groupLabels).map(([key, label]) =>
+            `<button type="button" class="${key === activeGroup ? "active" : ""}" data-stats-group="${key}">${label}</button>`
+          ).join("")}</span>
+        </div>
+        <div class="option-rate-rows">${rows}</div>
+        <small>未答 ${group.unanswered}%${q.multi ? "；多選題為各選項畫記率，合計不一定是 100%。" : "；合計可能因四捨五入略有差異。"}</small>
+      </section>`;
+  }
+
+  function explanationHtml(q) {
+    const explanation = q.explanation;
+    if (!explanation || explanation.reviewStatus !== "approved") {
+      return `
+        <section class="teacher-explanation pending-explanation">
+          <strong>老師解析正在逐題覆核</strong>
+          <p>先對照官方答案找出關鍵選項；這題通過科任教師檢查後，才會公開逐步解析，不用猜的方式補內容。</p>
+        </section>`;
+    }
+    const optionAnalysis = Object.entries(explanation.optionAnalysis || {}).map(([key, note]) =>
+      `<li class="${note.verdict === "correct" ? "correct-note" : ""}"><b>${key}</b>：${escapeHtml(note.reason)}</li>`
+    ).join("");
+    return `
+      <section class="teacher-explanation">
+        <p class="encouragement">${escapeHtml(explanation.encouragement)}</p>
+        <h3>這題先抓一個重點</h3>
+        <p>${escapeHtml(explanation.keyIdea)}</p>
+        <h3>一步一步想</h3>
+        <ol>${explanation.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+        <h3>每個選項怎麼看</h3>
+        <ul class="option-analysis">${optionAnalysis}</ul>
+        <p class="takeaway"><strong>帶去下一題：</strong>${escapeHtml(explanation.takeaway)}</p>
+      </section>`;
+  }
+
+  function setupStatsTabs(card, q) {
+    card.querySelectorAll("[data-stats-group]").forEach(button => {
+      button.addEventListener("click", () => {
+        const current = card.querySelector(".option-stats");
+        current.outerHTML = optionStatsHtml(q, button.dataset.statsGroup);
+        setupStatsTabs(card, q);
+      });
+    });
+  }
+
   function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
       "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
@@ -237,7 +313,7 @@
     if (q.written) {
       const response = card.querySelector("textarea").value.trim();
       feedback.className = "feedback show info";
-      feedback.innerHTML = `<strong>官方滿分參考答案與評分要點</strong><br>${escapeHtml(q.referenceAnswer || "請對照大考中心評分原則。")}<br><small>非選擇題須依原卷要求呈現計算過程、理由或作圖；本頁不自動判分。</small>`;
+      feedback.innerHTML = `<strong>官方滿分參考答案與評分要點</strong><br>${escapeHtml(q.referenceAnswer || "請對照大考中心評分原則。")}<br><small>非選擇題須依原卷要求呈現計算過程、理由或作圖；本頁不自動判分。</small>${explanationHtml(q)}`;
       result = { id:q.id, no:q.no, written:true, response, correct:null };
     } else {
       const selected = [...card.querySelectorAll(".option input:checked")].map(input => input.value).sort();
@@ -249,13 +325,15 @@
       if (q.fullCredit) {
         card.querySelectorAll(".option input").forEach(input => { input.disabled = true; });
         feedback.className = "feedback show ok";
-        feedback.innerHTML = "<strong>本題官方全體給分。</strong> 無論選擇或未作答，均依公告取得本題分數。";
+        feedback.innerHTML = "<strong>本題官方全體給分。</strong> 無論選擇或未作答，均依公告取得本題分數。" + explanationHtml(q);
         result = { id:q.id, no:q.no, written:false, selected, correct:true, fullCredit:true };
         updateWrongBook(q.id, true);
         session.results[session.index] = result;
         submit.disabled = true;
         next.hidden = false;
         saveHistory(result);
+        updateReviewSchedule(q.id, true);
+        refreshLearningCounts();
         return;
       }
       const correct = answerKeys(q.answer).sort();
@@ -271,17 +349,21 @@
       feedback.className = `feedback show ${isCorrect ? "ok" : "bad"}`;
       const officialAnswers = [q.answer, ...(q.alternateAnswers || [])]
         .map(answer => answerKeys(answer).join("、")).join(" 或 ");
-      feedback.innerHTML = isCorrect
+      const answerFeedback = isCorrect
         ? `<strong>答對了。</strong> 官方答案：${officialAnswers}`
         : `<strong>這題再想一下。</strong> 你的答案：${selected.join("、")}；官方答案：${officialAnswers}`;
+      feedback.innerHTML = `${answerFeedback}${explanationHtml(q)}${optionStatsHtml(q)}`;
+      setupStatsTabs(card, q);
       result = { id:q.id, no:q.no, written:false, selected, correct:isCorrect };
       updateWrongBook(q.id, isCorrect);
+      updateReviewSchedule(q.id, isCorrect);
     }
 
     session.results[session.index] = result;
     submit.disabled = true;
     next.hidden = false;
     saveHistory(result);
+    refreshLearningCounts();
   }
 
   function updateWrongBook(id, isCorrect) {
@@ -294,6 +376,18 @@
     const history = storage.get("gsatZiranHistory", []);
     history.push({ ...result, at:new Date().toISOString() });
     storage.set("gsatZiranHistory", history.slice(-500));
+  }
+
+  function updateReviewSchedule(id, isCorrect) {
+    const schedule = storage.get("gsatZiranReview", {});
+    const currentBox = schedule[id]?.box || 0;
+    const box = isCorrect ? Math.min(currentBox + 1, 5) : 0;
+    const intervals = [0, 1, 3, 7, 14, 30];
+    schedule[id] = {
+      box,
+      due: Date.now() + intervals[box] * 86400000
+    };
+    storage.set("gsatZiranReview", schedule);
   }
 
   function renderCurrent() {
@@ -318,7 +412,7 @@
     if (mode === "full") {
       const year = selectedYear();
       const fullBank = banks.find(bank => bank.year === Number(year)) || newestBank;
-      pool = fullBank.questions.map(q => ({ ...q, year:fullBank.year }));
+      pool = fullBank.questions.map(q => enrichQuestion(q, fullBank.year));
       $("questionCount").value = pool.length;
     }
     const count = Math.min(Math.max(Number($("questionCount").value) || 10, 1), pool.length);
@@ -367,23 +461,120 @@
   }
 
   $("startBtn").addEventListener("click", () => startSession("filtered"));
-  $("quickStartBtn").addEventListener("click", () => {
-    document.querySelectorAll(".subject-filter").forEach(input => { input.checked = true; });
-    $("yearFilter").value = "all";
-    $("typeFilter").value = "all";
-    $("tagFilter").value = "all";
-    $("difficultyFilter").value = "all";
-    $("questionCount").value = 10;
-    $("orderFilter").value = "random";
-    updateStats();
-    updatePoolCount();
-    startSession("filtered");
-  });
   $("fullExamBtn").addEventListener("click", () => startSession("full"));
   $("restartBtn").addEventListener("click", () => {
     $("summary").classList.remove("show");
     $("controls").scrollIntoView({ behavior:"smooth" });
   });
 
+  function startQuestionSet(questions) {
+    if (!questions.length) return;
+    session.questions = questions;
+    session.index = 0;
+    session.results = [];
+    session.startedAt = Date.now();
+    $("summary").classList.remove("show");
+    $("workspace").classList.add("active");
+    $("workspace").setAttribute("aria-hidden", "false");
+    startTimer();
+    renderCurrent();
+  }
+
+  function showHistory() {
+    const history = storage.get("gsatZiranHistory", []);
+    const recent = history.slice(-20).reverse();
+    $("historyContent").innerHTML = recent.length
+      ? `<p>共保留最近 ${history.length} 次作答紀錄。</p><ul class="history-list">${recent.map(item => {
+        const q = allQuestions.find(question => question.id === item.id);
+        return `<li><b>${escapeHtml(item.id)}</b> ${q ? escapeHtml(q.subject) : ""}・${item.correct == null ? "已自評" : item.correct ? "答對" : "待複習"}<small>${new Date(item.at).toLocaleString("zh-TW")}</small></li>`;
+      }).join("")}</ul>`
+      : "<p>還沒有作答紀錄。完成第一題後，這裡就會開始累積。</p>";
+    $("historyPanel").hidden = false;
+    $("historyPanel").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  function selectedPaperQuestions() {
+    const selected = new Set([...document.querySelectorAll(".paper-question:checked")].map(input => input.value));
+    return filteredPool().filter(q => selected.has(q.id));
+  }
+
+  function updatePaperCount() {
+    $("paperSelectedCount").textContent = `已選 ${selectedPaperQuestions().length} 題`;
+  }
+
+  function renderPaperList() {
+    const pool = filteredPool();
+    $("paperPoolSummary").textContent = `目前篩選符合 ${pool.length} 題；請勾選要放入考卷的題目。`;
+    $("paperList").innerHTML = pool.map(q => `
+      <label><input class="paper-question" type="checkbox" value="${escapeHtml(q.id)}">
+      <span>${q.year} 年第 ${q.no} 題・${escapeHtml(q.subject)}・${escapeHtml(q.tags.join("／"))}</span></label>`
+    ).join("");
+    $("paperList").querySelectorAll("input").forEach(input => input.addEventListener("change", updatePaperCount));
+    updatePaperCount();
+  }
+
+  function paperDocument(questions, teacherCopy = false) {
+    const body = questions.map((q, index) => {
+      const options = q.written ? "" : Object.entries(q.options).map(([key, value]) => `<div>（${key}）${escapeHtml(value)}</div>`).join("");
+      const answer = teacherCopy
+        ? `<div class="paper-answer"><b>答案：</b>${escapeHtml(q.answer || q.referenceAnswer || "官方全體給分")}${q.explanation ? `<br><b>解析：</b>${escapeHtml(q.explanation.keyIdea)}` : ""}</div>`
+        : "";
+      return `<section><h3>${index + 1}.（${q.year} 年第 ${q.no} 題）</h3><p>${escapeHtml(q.stem)}</p>${options}${answer}</section>`;
+    }).join("");
+    return `<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>學測自然科自編考卷</title><style>body{font-family:serif;line-height:1.8;max-width:800px;margin:auto}section{break-inside:avoid;margin:0 0 28px}.paper-answer{margin-top:10px;padding:8px;border-left:3px solid #26734d}</style><body><h1>學測自然科自編考卷</h1>${body}</body></html>`;
+  }
+
+  function printPaper() {
+    const questions = selectedPaperQuestions();
+    if (!questions.length) return;
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(paperDocument(questions));
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  function downloadWord() {
+    const questions = selectedPaperQuestions();
+    if (!questions.length) return;
+    const blob = new Blob(["\ufeff", paperDocument(questions, true)], { type:"application/msword" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "學測自然科自編考卷_教師卷.doc";
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  $("reviewBtn").addEventListener("click", () => startQuestionSet(dueReviewQuestions()));
+  $("wrongBookBtn").addEventListener("click", () => {
+    const wrong = new Set(storage.get("gsatZiranWrong", []));
+    startQuestionSet(allQuestions.filter(q => wrong.has(q.id)));
+  });
+  $("historyBtn").addEventListener("click", showHistory);
+  $("closeHistoryBtn").addEventListener("click", () => { $("historyPanel").hidden = true; });
+  $("moreBtn").addEventListener("click", () => {
+    const open = $("moreActions").hidden;
+    $("moreActions").hidden = !open;
+    $("moreBtn").setAttribute("aria-expanded", String(open));
+    $("moreBtn").textContent = open ? "更多功能⌄" : "更多功能⌃";
+  });
+  $("paperModeBtn").addEventListener("click", () => {
+    renderPaperList();
+    $("paperPanel").hidden = false;
+    $("paperPanel").scrollIntoView({ behavior:"smooth", block:"start" });
+  });
+  $("closePaperBtn").addEventListener("click", () => { $("paperPanel").hidden = true; });
+  $("paperSelectAllBtn").addEventListener("click", () => {
+    document.querySelectorAll(".paper-question").forEach(input => { input.checked = true; });
+    updatePaperCount();
+  });
+  $("paperSelectNoneBtn").addEventListener("click", () => {
+    document.querySelectorAll(".paper-question").forEach(input => { input.checked = false; });
+    updatePaperCount();
+  });
+  $("printPaperBtn").addEventListener("click", printPaper);
+  $("downloadWordBtn").addEventListener("click", downloadWord);
+
   initFilters();
+  refreshLearningCounts();
 })();
