@@ -311,6 +311,18 @@ for (const [id, stats] of Object.entries(optionStats)) {
     check(Number.isFinite(stats.groups?.[group]?.unanswered), `${id} ${group} 組未答率缺漏`);
   }
 }
+const n102q63 = banks.find(bank => bank.year === 102)?.questions.find(q => q.no === 63);
+check(
+  JSON.stringify(n102q63?.options) === JSON.stringify({
+    A: "Q₂R 型共價化合物",
+    B: "QR₂ 型離子化合物",
+    C: "QR₆ 型共價化合物",
+    D: "QR₂ 型共價化合物",
+    E: "Q₂R 型離子化合物",
+    F: "QR₆ 型離子化合物"
+  }),
+  "102 年第 63 題必須保留官方化學式下標位置"
+);
 const n96q27 = banks.find(bank => bank.year === 96)?.questions.find(q => q.no === 27);
 check(n96q27?.answer === "E" && n96q27?.alternateAnswers?.join(",") === "B", "96 年第 27 題必須保留官方 E 或 B 雙答案");
 const n95q4 = banks.find(bank => bank.year === 95)?.questions.find(q => q.no === 4);

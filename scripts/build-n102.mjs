@@ -39,6 +39,18 @@ await buildLegacy({
   year: 102,
   duration: 100,
   officialTextFile: "sources/official/102/102-natural-test-raw.txt",
+  transcriptOverrides: {
+    63: {
+      options: {
+        A: "Q₂R 型共價化合物",
+        B: "QR₂ 型離子化合物",
+        C: "QR₆ 型共價化合物",
+        D: "QR₂ 型共價化合物",
+        E: "Q₂R 型離子化合物",
+        F: "QR₆ 型離子化合物"
+      }
+    }
+  },
   topics,
   category,
   pageRanges,
