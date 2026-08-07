@@ -44,9 +44,9 @@ assert.equal(payload.options.length, 1400);
 assert.equal(payload.explanation.length, 1200);
 assert.equal("unexpected" in payload, false);
 
-assert.equal(reportEndpoint({ hostname: "gsat-ziran.vercel.app" }), "/api/report");
-assert.equal(reportEndpoint({ hostname: "gsat-ziran.pages.dev" }), "https://gsat-ziran.vercel.app/api/report");
-assert.equal(reportEndpoint({ hostname: "gsat-ziran.netlify.app" }), "https://gsat-ziran.vercel.app/api/report");
+assert.equal(reportEndpoint({ hostname: "gsat-ziran.pages.dev" }), "/api/report");
+assert.equal(reportEndpoint({ hostname: "gsat-ziran.vercel.app" }), "https://gsat-ziran.pages.dev/api/report");
+assert.equal(reportEndpoint({ hostname: "gsat-ziran.netlify.app" }), "https://gsat-ziran.pages.dev/api/report");
 
 let clientRequest;
 await submitReport(
@@ -57,7 +57,7 @@ await submitReport(
     return { ok: true, json: async () => ({ ok: true }) };
   },
 );
-assert.equal(clientRequest.url, "https://gsat-ziran.vercel.app/api/report");
+assert.equal(clientRequest.url, "/api/report");
 assert.equal(clientRequest.options.method, "POST");
 assert.match(reportFormHtml(), /name="issueType"/);
 assert.match(reportFormHtml(), /補充說明（選填）/);

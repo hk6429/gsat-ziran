@@ -102,7 +102,7 @@ npm test
 
 部署前必須先執行 `npm test`，並在三個正式網址做 cache-busting 煙霧驗收。
 
-題目問題回報由 Vercel Function 送往 Telegram；正式環境必須設定
+題目問題回報由 Cloudflare Pages Function 送往 Telegram；正式環境必須設定
 `TELEGRAM_BOT_TOKEN` 與 `TELEGRAM_CHAT_ID`，不得把值寫入前端或版本庫。
 
 ## 授權與聲明
