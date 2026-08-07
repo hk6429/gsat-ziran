@@ -392,9 +392,13 @@ check(n83q10?.answer === "A" && Object.keys(n83q10?.options || {}).join("") === 
 const n83q53 = banks.find(bank => bank.year === 83)?.questions.find(q => q.no === 53);
 check(n83q53?.answer === "D" && /第 53–57 題為綜合型題組/.test(n83q53?.passage || ""), "83 年第 53 題必須保留河口綜合題組情境");
 
-for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", "data/discrimination.js", ...explanationFiles.map(file => `data/${file}`)]) {
+for (const file of ["index.html", "check.html", "about.html", "privacy.html", "app.js", "check.js", "styles.css", "data/bank.js", "data/learning.js", "data/discrimination.js", "assets/vendor/katex/LICENSE.txt", ...explanationFiles.map(file => `data/${file}`)]) {
   check(fs.existsSync(path.join(root, file)), `缺少網站檔案：${file}`);
 }
+
+const katexLicense = fs.readFileSync(path.join(root, "assets/vendor/katex/LICENSE.txt"), "utf8");
+check(/Copyright \(c\) 2013-2020 Khan Academy/.test(katexLicense), "KaTeX 授權檔缺少上游著作權聲明");
+check(/The above copyright notice and this permission notice shall be included/.test(katexLicense), "KaTeX 授權檔缺少 MIT 再散布條件");
 
 const indexHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const checkHtml = fs.readFileSync(path.join(root, "check.html"), "utf8");
